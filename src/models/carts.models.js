@@ -1,6 +1,8 @@
 const cartSchemma = {
   products: {
     type: Array,
+    foreignKey: "products",
+    ref: "products",
     required: true,
     default: [],
   },
@@ -19,3 +21,5 @@ const cartSchemma = {
     enum: ["active", "send", "completed"],
   },
 };
+const Cart = mongoose.model("Cart", cartSchemma);
+export default Cart;

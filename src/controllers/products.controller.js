@@ -24,16 +24,14 @@ export const getProductById = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
-export const createProduct = async (product) => {
+export const createProduct = async (req, res) => {
     try {
-        // console.log("-----------", req.body);
-        // const product = req.body;
-        // console.log("-----------", product);
+        const product = req.body;
 
         const newProduct = await productsService.createProduct(product);
-        return
+        res.status(201).json(newProduct);
     } catch (error) {
-        return
+        res.status(500).json({ message: error.message });
     }
 }
 export const updateProduct = async (req, res) => {
