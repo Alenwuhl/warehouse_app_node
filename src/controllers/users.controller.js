@@ -1,22 +1,30 @@
-import usersService from "../services/users.service.js";
+import UsersService from "../services/users.service.js";
 
-const userService = new usersService();
+const userService = new UsersService();
 
-export const register = async (req, res) => {
+export const registerUser = async (req, res) => {
   try {
-    const { name, password, role } = req.body;
-    const user = await userService.registerUser(name, password, role);
-    res.status(201).json(user);
+    const { name, password, unit } = req.body;
+    const user = await userService.registerUser(name, password, unit);
+    return
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error);
   }
 };
+export async function registerAdmin (adminName, adminPassword) {
+  try {
+    const user = await userService.registerAdmin({ name: adminName, password: adminPassword });
+    return
+  } catch (error) {
+    console.error(error);
+  }
+}
 export const login = async (req, res) => {
   try {
     const { name, password } = req.body;
     const user = await userService.loginUser(name, password);
-    res.status(200).json(user);
+    return
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error(error);
   }
 };

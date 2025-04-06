@@ -53,5 +53,44 @@ export default class ProductService {
       throw error;
     }
   };
+  modifyQuantityOnStock = async (id, newQuantity) => {
+    try {
+      const product = await Product.findById(id);
+      const newStock = product.stock + newQuantity;
+      const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        { $inc: { stock: newStock } },
+        { new: true }
+      );
+      console.log("The product stock has been updated, the new stock is: ", updatedProduct.stock);
+      return updatedProduct;
+    } catch (error) {
+      console.error("Error modifying quantity to product:", error);
+      throw error;
+    }
+  };
+  verifyProduct = async (id, quantity) => {
+    const product = Product.findById(id);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    if (product.stock < quantity) {
+      console.log("You will not be able to buy this product, the stock is: ", product.stock);
+      console.log("Try to buy a lower quantity");
+      throw new Error("Not enough stock");
+    }
+    if (product.expirationDate < new Date()) {
+      console.log("You will not be able to buy this product!");
+      throw new Error("The product has expired");
+    }
+    if (product.status === "Defective product") {
+      console.log("You will not be able to buy this product!");
+      throw new Error("Product is defective");
+    }
+    if (product.status === "Sold product") {
+      console.log("You will not be able to buy this product!");
+      throw new Error("Product is sold");
+    }
+    return product;
+  }
 }
-

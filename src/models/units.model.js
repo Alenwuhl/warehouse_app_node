@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 const unitSchemma = {
     name: {
         type: String,
@@ -14,4 +15,6 @@ const unitSchemma = {
         required: true
     },
 }
+const Unit = mongoose.model("units", unitSchemma);
+export default Unit;
   
