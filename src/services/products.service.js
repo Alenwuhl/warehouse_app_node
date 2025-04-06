@@ -1,8 +1,7 @@
 import Product from "../models/products.model.js";
 
 export default class ProductService {
-
-    getProducts = async () => {
+  getProducts = async () => {
     try {
       const products = await Product.find();
       return products;
@@ -62,7 +61,10 @@ export default class ProductService {
         { $inc: { stock: newStock } },
         { new: true }
       );
-      console.log("The product stock has been updated, the new stock is: ", updatedProduct.stock);
+      console.log(
+        "The product stock has been updated, the new stock is: ",
+        updatedProduct.stock
+      );
       return updatedProduct;
     } catch (error) {
       console.error("Error modifying quantity to product:", error);
@@ -75,7 +77,10 @@ export default class ProductService {
       throw new Error("Product not found");
     }
     if (product.stock < quantity) {
-      console.log("You will not be able to buy this product, the stock is: ", product.stock);
+      console.log(
+        "You will not be able to buy this product, the stock is: ",
+        product.stock
+      );
       console.log("Try to buy a lower quantity");
       throw new Error("Not enough stock");
     }
@@ -92,5 +97,5 @@ export default class ProductService {
       throw new Error("Product is sold");
     }
     return product;
-  }
+  };
 }

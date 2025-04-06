@@ -13,5 +13,11 @@ if (!MONGO_URI) {
 }
 
 mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch((error) => console.error('Connection error', error));
+  .then(() => {
+    console.log("MongoDB connected successfully");
+  })
+  .catch((error) => {
+    console.error("MongoDB connection error:", error);
+    process.exit(1);
+  });
+

@@ -2,11 +2,10 @@ import UsersService from "../services/users.service.js";
 
 const userService = new UsersService();
 
-export const registerUser = async (req, res) => {
+export async function registerUser(name, password, unit){
   try {
-    const { name, password, unit } = req.body;
     const user = await userService.registerUser(name, password, unit);
-    return
+    return user;
   } catch (error) {
     console.error(error);
   }
@@ -14,16 +13,15 @@ export const registerUser = async (req, res) => {
 export async function registerAdmin (adminName, adminPassword) {
   try {
     const user = await userService.registerAdmin({ name: adminName, password: adminPassword });
-    return
+    return user;
   } catch (error) {
     console.error(error);
   }
 }
-export const login = async (req, res) => {
+export async function loginUser(name, password) {
   try {
-    const { name, password } = req.body;
     const user = await userService.loginUser(name, password);
-    return
+    return user;
   } catch (error) {
     console.error(error);
   }

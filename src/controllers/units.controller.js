@@ -1,5 +1,6 @@
 import UnitService from "../services/units.service.js";
 
+
 const unitService = new UnitService();
 
 export const updateUnit = async (req, res) => {
@@ -14,13 +15,30 @@ export const updateUnit = async (req, res) => {
     }
 
 }
-export const returnUnitBudget = async (req, res) => {
+export async function createUnit (unitName, unitBudget) {
     try {
-        const { id } = req.params;
-        const budget = await unitService.returnUnitBudget(id);
-        res.status(200).json({ budget });
+        const unit = { name: unitName, budget: unitBudget, unitCode: unitName };
+        const newUnit = await unitService.createUnit(unit);
+        return newUnit;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export async function returnUnitBudget (unitName) {
+    try {
+        const unitId = await unitService.getUnitId(unitName);
+        const unit = await unitService.returnUnitBudget(unitId);
+        return unit;
+    } catch (error) {
+        console.error(error);
+    }
+}
+export async function getAllUnitsNames() {
+    try {
+        const units = await unitService.getAllUnitsNames();
+        return units;
     }
     catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error(error);
     }
 }

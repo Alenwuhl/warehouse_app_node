@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 
 const userSchema = {
-    id: {
-        type: String,
-        required: true,
-        unique: true,
-    },
     name: String,
     password: String,
     role: {

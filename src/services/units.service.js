@@ -21,16 +21,60 @@ export default class UnitService {
   async returnUnitBudgetbyUserId(id) {
     try {
       const user = await UserService.findById(id);
-        if (!user) {
-            throw new Error("User not found");
-        }
-        const unit = await Unit.find(user.unit);
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const unit = await Unit.find(user.unit);
       if (!unit) {
         throw new Error("Unit of this user not found");
       }
       return unit.budget;
     } catch (error) {
       console.error("Error returning unit budget:", error);
+      throw error;
+    }
+  }
+  async returnUnitBudget(unitId) {
+    try {
+      const unit = await Unit.findById(unitId);
+      if (!unit) {
+        throw new Error("Unit not found");
+      }
+      return unit.budget;
+    } catch (error) {
+      console.error("Error returning unit budget:", error);
+      throw error;
+    }
+  }
+  async createUnit(unit) {
+    try {
+      const newUnit = await Unit.create(unit);
+      return newUnit;
+    } catch (error) {
+      console.error("Error creating unit:", error);
+      throw error;
+    }
+  }
+
+  async getAllUnitsNames() {
+    try {
+      const units = await Unit.find();
+      const unitNames = units.map((unit) => unit.name);
+      return unitNames;
+    } catch (error) {
+      console.error("Error getting all units:", error);
+      throw error;
+    }
+  }
+  async getUnitId(unitName) {
+    try {
+      const unit = await Unit.findOne({ name: unitName });
+      if (!unit) {
+        throw new Error("Unit not found");
+      }
+      return unit._id;
+    } catch (error) {
+      console.error("Error getting unit ID:", error);
       throw error;
     }
   }

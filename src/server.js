@@ -5,6 +5,7 @@ import { createInterface } from "readline/promises";
 import { stdin as input, stdout as output } from "process";
 import * as userController from "./controllers/users.controller.js";
 import * as unitsController from "./controllers/units.controller.js";
+import * as productsController from "./controllers/products.controller.js";
 
 dotenv.config();
 
@@ -76,7 +77,6 @@ async function displayMainMenu() {
   switch (answer) {
     case "1":
       const adminName = await rl.question("Please enter your name: ");
-      console.log("Your name is: ", adminName);
       
       if (!adminName) {
         console.log("Name is required.");
@@ -87,23 +87,29 @@ async function displayMainMenu() {
         console.log("Password is required.");
         return;
       }
+      
       userController.registerAdmin(adminName, adminPassword);
+      
+      
       console.log(`You have registered as an admin with the name: ${adminName}`);
       break;
     case "2":
       const name = await rl.question("Please enter your name: ");
       const password = await rl.question("Please enter your password: ");
-      const unit = await rl.question(`Please enter your unit, you can choose between ${unitsController.getAllUnits()}:`);
+      const availableUnits = await unitsController.getAllUnitsNames();
+      console.log(`Available units: ${availableUnits}`);
+      const unit = await rl.question(`Please enter your unit, you can choose between: ${availableUnits.join(', ')} `);
       userController.registerUser(name, password, unit);
       console.log(`You have registered as a unit member with the name: ${name}`);
       console.log(`You have registered in the unit: ${unit}`);
-      console.log(`Your budget is: ${unitsController.getUnitBudget(unit)}`);
+      const unitBudget = await unitsController.returnUnitBudget(unit);
+      console.log(`Your budget is: ${unitBudget}`);
       break;
     case "3":
       const loginName = await rl.question("Please enter your name: ");
       const loginPassword = await rl.question("Please enter your password: ");
       const loginResponse = await userController.loginUser(loginName, loginPassword);
-      if (loginResponse.error) {
+      if (!loginResponse) {
         console.log("Login failed. Please check your credentials.");
       } else {
         console.log(`Welcome back, ${loginResponse.user.name}!`);
@@ -113,7 +119,7 @@ async function displayMainMenu() {
           startAdminApp()
         } else {
           console.log("You are logged in as a unit member.");
-          console.log(`Your unit budget is: ${unitsController.getUnitBudget(loginResponse.user.unit)}`);
+          console.log(`Your unit budget is: ${unitsController.returnUnitBudget(loginResponse.user.unit)}`);
           console.log("You can now buy products from the store.");
           startShopping(loginResponse.user.unit);
         }
@@ -144,7 +150,26 @@ async function startAdminApp() {
   console.log("15. Find products by expiration date");
   console.log("16. Exit");
 
-}
+  const answer = await rl.question("Please enter your answer: ");
+
+  switch (answer) {
+    case "1":
+      availableProducts = await productsController.getProducts();
+      console.log("Products: ", availableProducts);
+      // console.log("Products: ", await productController.getAllProducts());
+      break;
+    case "2":
+      const productName = await rl.question("Please enter the product name: ");
+      // const productCategory = await rl.question("Please enter the product category, you can choose between: electronics, clothing, food: ");
+      const productPrice = await rl.question("Please enter the product price: ");
+      const productStock = await rl.question("Please enter the product stock: ");
+      await productController.createProduct(productName, productCategory, productPrice, productStock);
+      console.log(`Product ${productName} created successfully.`);
+      break;
+    // case "3":
+    //   const newProductName = await rl.question("Please enter the new product name: ");
+
+}}
 // async function startShopping(unit) {
 //   console.log("Welcome to the store!");
 //   console.log("1. View products");

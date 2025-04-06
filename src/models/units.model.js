@@ -17,4 +17,3 @@ const unitSchemma = {
 }
 const Unit = mongoose.model("units", unitSchemma);
 export default Unit;
-  
