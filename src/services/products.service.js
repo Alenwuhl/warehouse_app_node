@@ -21,6 +21,19 @@ export default class ProductService {
     }
   };
 
+  getProductsNames = async () => {
+    try {
+      const products = await Product.find();
+      const productNames = products.map((product) => ({
+        Title: product.title,
+      }));
+      return productNames;
+    } catch (error) {
+      console.error("Error getting products names:", error);
+      throw error;
+    }
+  };
+
   createProduct = async (productData) => {
     try {
       const newProduct = await Product.create(productData);

@@ -1,6 +1,13 @@
 import startAdminApp from "./adminApp.js";
+import * as userController from "./controllers/users.controller.js";
+import * as unitsController from "./controllers/units.controller.js";
+import * as productsController from "./controllers/products.controller.js";
+import { createInterface } from "readline/promises";
+import { stdin as input, stdout as output } from "process";
 
-export async function displayMainMenu() {
+const rl = createInterface({ input, output });
+
+export default async function displayMainMenu() {
     console.log("Welcome to the main menu!");
     console.log("1. Register as an admin");
     console.log("2. Register as a unit member");
@@ -50,7 +57,7 @@ export async function displayMainMenu() {
           if (loginResponse.user.role === "admin") {
             console.log("You are logged in as an admin.");
             console.log("You can now manage products and units.");
-            startAdminApp()
+            await startAdminApp()
           } else {
             console.log("You are logged in as a unit member.");
             console.log(`Your unit budget is: ${unitsController.returnUnitBudget(loginResponse.user.unit)}`);

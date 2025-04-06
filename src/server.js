@@ -8,7 +8,7 @@ import * as unitsController from "./controllers/units.controller.js";
 import * as productsController from "./controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import displayMainMenu from "./displayMenu.js";
-import startShopping from "./shoppingApp.js";
+// import startShopping from "./shoppingApp.js";
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ async function startServer() {
     console.log("- You can only buy products if you have enough budget.");
     console.log("- You can modify your order until it is completed.");
     console.log("- You can only see your own orders.");
-    console.log("---------------------------------------");
+    console.log("----------------------------------------------------------------");
     console.log("If you are an admin, you can see all the products and units.");
     console.log("- You can also create, update and delete products.");
     console.log("- You can also create, update and delete units.");

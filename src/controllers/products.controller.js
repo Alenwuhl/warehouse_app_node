@@ -11,6 +11,15 @@ export async function getProducts (){
     }
 }
 
+export async function getProductsNames (){
+    try {
+        const products = await productsService.getProductsNames();
+        return products;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 export async function getProductById (id){
     try {
         const product = await productsService.getProductById(id);
