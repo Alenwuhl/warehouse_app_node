@@ -7,7 +7,9 @@ import "./config/mongo.config.js";
 // import * as productsController from "./controllers/products.controller.js";
 import startAdminApp from "./appServices/adminApp/adminApp.js";
 import displayMainMenu from "./appServices/displayMenu.js";
+import startShopping from "./appServices/userApp/shoppingApp.js";
 // import startShopping from "./shoppingApp.js";
+import rl from "./config/readline.js";
 
 dotenv.config();
 
@@ -20,8 +22,8 @@ app.listen(port);
 
 
 
-
-startAdminApp();
+const testId = "67f26a75a858a5ab1cce857f";
+startShopping(testId);
 
 async function startServer() {
   console.log("Do you know the rules?");

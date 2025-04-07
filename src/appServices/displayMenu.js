@@ -1,7 +1,7 @@
 import startAdminApp from "./adminApp/adminApp.js";
 import * as userController from "../controllers/users.controller.js";
 import * as unitsController from "../controllers/units.controller.js";
-import startShopping from "./shoppingApp.js";
+import startShopping from "./userApp/shoppingApp.js";
 import rl from "../config/readline.js"
 
 export default async function displayMainMenu() {
@@ -47,13 +47,22 @@ export default async function displayMainMenu() {
     case "2":
       const username = await rl.question("Please enter your username: ");
       const password = await rl.question("Please enter your password: ");
-      const availableUnits = await unitsController.getAllUnitsNames();
-      console.log(`Available units: ${availableUnits}`);
-      const unit = await rl.question(
-        `Please enter your unit, you can choose between: ${availableUnits.join(
-          ", "
-        )} `
-      );
+      const units = await unitsController.getUnits();
+      console.log(`Please enter your unit: 
+              ${units
+                .map((unit, i) => `${i + 1}. ${unit.name}`)
+                .join("\n")}`);
+      let unit = await rl.question("- ");
+  
+      while (unit < 1 || unit > units.length) {
+        console.log("Invalid choice. Please enter a valid number");
+        console.log(`Please enter your unit: 
+                ${units
+                  .map((unit, i) => `${i + 1}. ${unit.title}`)
+                  .join("\n")}`);
+      }
+      unit = units[unit - 1].id;
+
       const registerUserResponse = await userController.registerUser(username, password, unit);
       if (registerUserResponse) {
         console.log(

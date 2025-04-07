@@ -3,8 +3,11 @@ import Unit from "../models/units.model.js";
 import { createHash, comparePassword } from "../utils/bcrypt.js";
 
 export default class UsersService {
-  async registerUser(username, password, unit) {
+  async registerUser(username, password, unitId) {
     try {
+      if (!username || !password || !unitId) {
+        throw new Error("username, password and unit are required");
+      }
       let verifyUsername = [];
       const otherUser = await UserModel.findOne({ username });
       if (otherUser) {
@@ -14,7 +17,7 @@ export default class UsersService {
         throw new Error("Username already exists, try another one");
       }
       const hashedPassword = createHash(password);
-      const newUser = new UserModel({ username, password: hashedPassword, unit });   
+      const newUser = new UserModel({ username, password: hashedPassword, unit: unitId });   
       return await newUser.save();
       
     } catch (error) {

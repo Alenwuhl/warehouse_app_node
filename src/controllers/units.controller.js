@@ -19,9 +19,8 @@ export async function createUnit(unitName, unitBudget) {
     console.error(error);
   }
 }
-export async function returnUnitBudget(unitName) {
+export async function returnUnitBudget(unitId) {
   try {
-    const unitId = await unitService.getUnitId(unitName);
     const unit = await unitService.returnUnitBudget(unitId);
     return unit;
   } catch (error) {

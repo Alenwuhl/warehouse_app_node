@@ -19,14 +19,6 @@ export async function getAllProductsNamesAndIds() {
     console.error(error);
   }
 }
-// export async function getProductByName(name) {
-//   try {
-//     const product = await productsService.getProductByName(name);
-//     return product;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
 
 export async function getProductById(id) {
   try {
