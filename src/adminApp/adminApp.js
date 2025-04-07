@@ -85,48 +85,48 @@ export default async function startAdminApp() {
         await startAdminApp();
       }
       break;
-    case "7":
-      const unitNameToUpdate = await rl.question(
-        "Please enter the unit name to update: "
-      );
-      const newUnitBudget = await rl.question(
-        "Please enter the new unit budget: "
-      );
-      await unitsController.updateUnitBudget(unitNameToUpdate, newUnitBudget);
-      break;
-    case "8":
-      const unitNameToDelete = await rl.question(
-        "Please enter the unit name to delete: "
-      );
-      await unitsController.deleteUnit(unitNameToDelete);
-      break;
-    case "9":
-      try {
-        await viewAllOrders();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
-      break;
-    case "10":
-      const orderNumber = await rl.question("Please enter the order number: ");
-      const order = await cartsController.getOrderByNumber(orderNumber);
-      console.log("Order: ", order);
-      break;
-    case "11":
-      const orderStatus = await rl.question("Please enter the order status: ");
-      const ordersByStatus = await cartsController.getOrdersByStatus(
-        orderStatus
-      );
-      console.log("Orders: ", ordersByStatus);
-      break;
-    case "12":
-      const orderProduct = await rl.question("Please enter the product name: ");
-      const ordersByProduct = await cartsController.getOrdersByProduct(
-        orderProduct
-      );
-      console.log("Orders: ", ordersByProduct);
-      break;
+    // case "7":
+    //   const unitNameToUpdate = await rl.question(
+    //     "Please enter the unit name to update: "
+    //   );
+    //   const newUnitBudget = await rl.question(
+    //     "Please enter the new unit budget: "
+    //   );
+    //   await unitsController.updateUnitBudget(unitNameToUpdate, newUnitBudget);
+    //   break;
+    // case "8":
+    //   const unitNameToDelete = await rl.question(
+    //     "Please enter the unit name to delete: "
+    //   );
+    //   await unitsController.deleteUnit(unitNameToDelete);
+    //   break;
+    // case "9":
+    //   try {
+    //     await viewAllOrders();
+    //   } catch (error) {
+    //     console.error(error);
+    //     await startAdminApp();
+    //   }
+    //   break;
+    // case "10":
+    //   const orderNumber = await rl.question("Please enter the order number: ");
+    //   const order = await cartsController.getOrderByNumber(orderNumber);
+    //   console.log("Order: ", order);
+    //   break;
+    // case "11":
+    //   const orderStatus = await rl.question("Please enter the order status: ");
+    //   const ordersByStatus = await cartsController.getOrdersByStatus(
+    //     orderStatus
+    //   );
+    //   console.log("Orders: ", ordersByStatus);
+    //   break;
+    // case "12":
+    //   const orderProduct = await rl.question("Please enter the product name: ");
+    //   const ordersByProduct = await cartsController.getOrdersByProduct(
+    //     orderProduct
+    //   );
+    //   console.log("Orders: ", ordersByProduct);
+    //   break;
     case "13":
       try {
         await findProductsByCategory();
