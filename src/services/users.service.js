@@ -46,7 +46,6 @@ export default class UsersService {
     }
   }
 
-  //Tengo que arreglar esto
   async loginUser(username, password) {
     try {
       const user = await UserModel.findOne({ username });
