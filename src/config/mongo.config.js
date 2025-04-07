@@ -14,7 +14,6 @@ if (!MONGO_URI) {
 
 mongoose.connect(MONGO_URI)
   .then(() => {
-    console.log("MongoDB connected successfully");
   })
   .catch((error) => {
     console.error("MongoDB connection error:", error);
