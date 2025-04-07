@@ -1,9 +1,6 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
-
-export const rl = createInterface({ input, output });
+import rl from "../../config/readline.js"
 
 export default async function findProductsByDefectiveProduct() {
   try {

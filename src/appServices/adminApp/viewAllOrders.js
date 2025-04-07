@@ -1,8 +1,5 @@
 import * as cartsController from "../../controllers/cart.controller.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
-
-export const rl = createInterface({ input, output });
+import rl from "../../config/readline.js"
 
 export default async function viewAllOrders() {
   try {

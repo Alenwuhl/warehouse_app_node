@@ -56,11 +56,10 @@ export default class UnitService {
     }
   }
 
-  async getAllUnitsNames() {
+  async getUnits() {
     try {
       const units = await Unit.find();
-      const unitNames = units.map((unit) => unit.name);
-      return unitNames;
+      return units;
     } catch (error) {
       console.error("Error getting all units:", error);
       throw error;
@@ -75,6 +74,15 @@ export default class UnitService {
       return unit._id;
     } catch (error) {
       console.error("Error getting unit ID:", error);
+      throw error;
+    }
+  }
+
+  async deleteUnit(id) {
+    try {
+      return await Unit.findByIdAndDelete(id);
+    } catch (error) {
+      console.error("Error deleting unit:", error);
       throw error;
     }
   }

@@ -1,11 +1,7 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
+import rl from "../../config/readline.js"
 
-export const rl = createInterface({ input, output });
-
-// i need to fix the status part
 export default async function updateProduct() {
   const productsNames = await productsController.getAllProductsNamesAndIds();
   console.log(`Please enter the product name to update: 
@@ -108,6 +104,7 @@ export default async function updateProduct() {
         console.log("You cannot update the status of a defective product.");
         console.log("Try creating a new product instead.");
         await startAdminApp();
+      } else {
         console.log('Do you want to change the status to "Defective product"?');
         console.log("1. Yes");
         console.log("2. No");

@@ -15,8 +15,8 @@ export default class UsersService {
       }
       const hashedPassword = createHash(password);
       const newUser = new UserModel({ username, password: hashedPassword, unit });   
-      await newUser.save();
-      return newUser;
+      return await newUser.save();
+      
     } catch (error) {
       throw new Error("Error registering user", error);
     }

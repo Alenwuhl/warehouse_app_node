@@ -10,25 +10,24 @@ import viewAllOrders from "./viewAllOrders.js";
 import findProductsByCategory from "./findProductsByCategory.js";
 import findProductsByDefectiveProduct from "./findProductsByDefectiveProduct.js";
 import findProductsByExpirationDate from "./findProductsByExpirationDate.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
+import updateUnit from "./updateUnit.js"; 
+import deleteUnit from "./deleteUnit.js";
+import rl from "../../config/readline.js";
 
-export const rl = createInterface({ input, output });
-
-export default async function startAdminApp() {
+export default async function startAdminApp() { 
   console.log("Welcome to the admin app!");
   console.log("1. View all products ----(Done)");
   console.log("2. Create a new product ----(Done)");
-  console.log("3. Update a product ----(i need to fix it))");
-  console.log("4. Delete a product");
+  console.log("3. Update a product ----(Done))");
+  console.log("4. Delete a product ----(Done)");
   console.log("5. View all units  ----(Done)");
   console.log("6. Create a new unit ----(Done)");
-  console.log("7. Update budget for an unit");
-  console.log("8. Delete a unit");
-  console.log("9. View all orders");
-  console.log("10. Find orders by order number");
-  console.log("11. Find orders by status");
-  console.log("12. Find orders by product");
+  console.log("7. Update budget for an unit ----(Done)");
+  console.log("8. Delete a unit ----(Done)");
+  console.log("9. View all orders"); /* I dont have the orders*/ 
+  console.log("10. Find orders by order number"); /* I dont have the orders*/ 
+  console.log("11. Find orders by status");/* I dont have the orders*/ 
+  console.log("12. Find orders by product");/* I dont have the orders*/ 
   console.log("13. Find products by category ----(Done)");
   console.log("14. Find products by defective product ----(Done)");
   console.log("15. Find products by expiration date ----(Done)");
@@ -85,29 +84,30 @@ export default async function startAdminApp() {
         await startAdminApp();
       }
       break;
-    // case "7":
-    //   const unitNameToUpdate = await rl.question(
-    //     "Please enter the unit name to update: "
-    //   );
-    //   const newUnitBudget = await rl.question(
-    //     "Please enter the new unit budget: "
-    //   );
-    //   await unitsController.updateUnitBudget(unitNameToUpdate, newUnitBudget);
-    //   break;
-    // case "8":
-    //   const unitNameToDelete = await rl.question(
-    //     "Please enter the unit name to delete: "
-    //   );
-    //   await unitsController.deleteUnit(unitNameToDelete);
-    //   break;
-    // case "9":
-    //   try {
-    //     await viewAllOrders();
-    //   } catch (error) {
-    //     console.error(error);
-    //     await startAdminApp();
-    //   }
-    //   break;
+    case "7":
+      try{
+        await updateUnit();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
+      break;
+    case "8":
+      try {
+        await deleteUnit();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
+      break;
+    case "9":
+      try {
+        await viewAllOrders();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
+      break;
     // case "10":
     //   const orderNumber = await rl.question("Please enter the order number: ");
     //   const order = await cartsController.getOrderByNumber(orderNumber);

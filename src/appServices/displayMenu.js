@@ -2,10 +2,7 @@ import startAdminApp from "./adminApp/adminApp.js";
 import * as userController from "../controllers/users.controller.js";
 import * as unitsController from "../controllers/units.controller.js";
 import startShopping from "./shoppingApp.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
-
-const rl = createInterface({ input, output });
+import rl from "../config/readline.js"
 
 export default async function displayMainMenu() {
   console.log("Welcome to the main menu!");

@@ -1,25 +1,35 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
-
-export const rl = createInterface({ input, output });
+import rl from "../../config/readline.js";
 
 export default async function deleteProduct() {
-  
-    const productNameToDelete = await rl.question(
-        "Please enter the product name to delete: "
-      );
-      const deleteProduct = await productsController.deleteProduct(
-        productNameToDelete
-      );
-      if (deleteProduct) {
-        console.log(`Product ${productNameToDelete} deleted successfully.`);
-        await startAdminApp();
-      } else {
-        console.log(
-          `Product ${productNameToDelete} not found or could not be deleted.`
-        );
-        await startAdminApp();
-      }
+  try {
+    const products = await productsController.getAllProductsNamesAndIds();
+    console.log(`Please enter the product name to delete: 
+    ${products.map((product, i) => `${i + 1}. ${product.title}`).join("\n")}`);
+
+    let productIdToDelete = await rl.question("- ");
+
+    while (productIdToDelete < 1 || productIdToDelete > products.length) {
+      console.log("Invalid choice. Please enter a valid number");
+      console.log(`Please enter the product name to delete: 
+        ${products
+          .map((product, i) => `${i + 1}. ${product.title}`)
+          .join("\n")}`);
+    }
+
+    productIdToDelete = products[productIdToDelete - 1].id;
+
+    const deleteProduct = await productsController.deleteProduct(productIdToDelete);
+    if (deleteProduct) {
+      console.log("Product deleted successfully");
+      startAdminApp();
+    } else {
+      console.log("Error deleting product");
+      await deleteProduct();
+    }
+  } catch (error) {
+    console.log("Error deleting product");
+    await startAdminApp();
+  }
 }

@@ -19,14 +19,14 @@ export async function getAllProductsNamesAndIds() {
     console.error(error);
   }
 }
-export async function getProductByName(name) {
-  try {
-    const product = await productsService.getProductByName(name);
-    return product;
-  } catch (error) {
-    console.error(error);
-  }
-}
+// export async function getProductByName(name) {
+//   try {
+//     const product = await productsService.getProductByName(name);
+//     return product;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
 export async function getProductById(id) {
   try {
@@ -116,10 +116,8 @@ export async function findProductsByExpirationDate(expirationDate) {
   }
 }
 
-export async function deleteProduct(name) {
+export async function deleteProduct(id) {
   try {
-    const product = await productsService.getProductById(name);
-    const id = product.id;
     const deletedProduct = await productsService.deleteProduct(id);
     if (!deletedProduct) {
       throw new Error("Product not found");

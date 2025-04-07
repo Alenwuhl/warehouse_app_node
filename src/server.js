@@ -1,13 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import "./config/mongo.config.js";
-import { createInterface } from "readline/promises";
-import { stdin as input, stdout as output } from "process";
+
 // import * as userController from "./controllers/users.controller.js";
 // import * as unitsController from "./controllers/units.controller.js";
 // import * as productsController from "./controllers/products.controller.js";
-import startAdminApp from "./adminApp/adminApp.js";
-import displayMainMenu from "./displayMenu.js";
+import startAdminApp from "./appServices/adminApp/adminApp.js";
+import displayMainMenu from "./appServices/displayMenu.js";
 // import startShopping from "./shoppingApp.js";
 
 dotenv.config();
@@ -19,7 +18,8 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 8080;
 app.listen(port);
 
-export const rl = createInterface({ input, output });
+
+
 
 startAdminApp();
 
