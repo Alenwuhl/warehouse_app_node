@@ -1,4 +1,4 @@
-import startAdminApp from "./adminApp.js";
+import startAdminApp from "./adminApp/adminApp.js";
 import * as userController from "./controllers/users.controller.js";
 import * as unitsController from "./controllers/units.controller.js";
 import startShopping from "./shoppingApp.js";
@@ -20,12 +20,14 @@ export default async function displayMainMenu() {
       const adminName = await rl.question("Please enter your username: ");
 
       if (!adminName) {
-        console.log("Username is required.");
+        console.log("Username is required, please try again.");
+        await displayMainMenu();
         return;
       }
       const adminPassword = await rl.question("Please enter your password: ");
       if (!adminPassword) {
-        console.log("Password is required.");
+        console.log("Password is required, please try again.");
+        await displayMainMenu();
         return;
       }
 
@@ -39,10 +41,10 @@ export default async function displayMainMenu() {
           `You have registered as an admin with the username: ${adminName}`
         );
         console.log("You can now manage products, orders and units.");
-        startAdminApp();
+        await startAdminApp();
       } else {
         console.log("Registration failed. Please try again.");
-        displayMainMenu();
+        await displayMainMenu();
       }
       break;
     case "2":
@@ -63,10 +65,10 @@ export default async function displayMainMenu() {
         console.log(`You have registered in the unit: ${unit}`);
         const unitBudget = await unitsController.returnUnitBudget(unit);
         console.log(`Your budget is: ${unitBudget}`);
-        startShopping(unit);
+        await startShopping(unit);
       } else {
         console.log("Registration failed. Please try again.");
-        displayMainMenu();
+        await displayMainMenu();
       }
       break;
     case "3":
@@ -78,7 +80,7 @@ export default async function displayMainMenu() {
       );
       if (!loginResponse) {
         console.log("Login failed. Please check your credentials.");
-        displayMainMenu();
+        await displayMainMenu();
       } else {
         console.log(`Welcome back, ${loginResponse.user.username}!`);
           if (loginResponse.user.role === "admin") {
@@ -95,6 +97,6 @@ export default async function displayMainMenu() {
       break;
     default:
       console.log("Invalid answer. Please try again.");
-      displayMainMenu();
+      await displayMainMenu();
   };
 };

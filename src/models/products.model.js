@@ -8,7 +8,7 @@ const productSchemma = {
   category: {
     type: String,
     required: true,
-    enum: ["arms", "clothing", "other"],
+    enum: ["weapons", "clothing", "electronics", "other"],
   },
   stock: { type: Number, required: true },
   expirationDate: { type: Date, required: true },

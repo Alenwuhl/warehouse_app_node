@@ -20,12 +20,22 @@ export default class ProductService {
       throw error;
     }
   };
+  getProductByName = async (name) => {
+    try {
+      const product = await Product.findOne({ title: name });
+      return product;
+    } catch (error) {
+      console.error("Error getting product by name:", error);
+      throw error;
+    }
+  };
 
   getProductsNames = async () => {
     try {
       const products = await Product.find();
       const productNames = products.map((product) => ({
         Title: product.title,
+        id: product._id,
       }));
       return productNames;
     } catch (error) {
@@ -36,6 +46,21 @@ export default class ProductService {
 
   createProduct = async (productData) => {
     try {
+      if (
+        !productData.title ||
+        !productData.description ||
+        !productData.price ||
+        !productData.stock ||
+        !productData.category
+      ) {
+        throw new Error("All fields are required");
+      }
+      if (productData.stock < 0) {
+        throw new Error("Stock cannot be negative");
+      }
+      if (productData.expirationDate < new Date()) {
+        throw new Error("Expiration date cannot be in the past");
+      }
       const newProduct = await Product.create(productData);
       return newProduct;
     } catch (error) {
@@ -44,12 +69,33 @@ export default class ProductService {
     }
   };
 
-  updateProduct = async (id, productData) => {
+  updateProduct = async (id, updateAttribute, newValue) => {
     try {
-      const updatedProduct = await Product.findByIdAndUpdate(id, productData, {
-        new: true,
-        runValidators: true,
-      });
+      const productToUpdate = await Product.findById(id);
+      if (!productToUpdate) {
+        throw new Error("Product not found");
+      }
+      if (
+        (updateAttribute === "title" && newValue === "") ||
+        (updateAttribute === "description" && newValue === "")
+      ) {
+        throw new Error("Title or description cannot be empty");
+      }
+      if (updateAttribute === "stock" && newValue < 0) {
+        throw new Error("Stock cannot be negative");
+      }
+      if (updateAttribute === "expirationDate" && newValue < new Date()) {
+        throw new Error("Expiration date cannot be in the past");
+      }
+      const updatedProduct = await Product.findByIdAndUpdate(
+        id,
+        {
+          $set: {
+            [updateAttribute]: newValue,
+          },
+        },
+        { new: true }
+      );
       return updatedProduct;
     } catch (error) {
       console.error("Error updating product:", error);

@@ -3,10 +3,10 @@ import dotenv from "dotenv";
 import "./config/mongo.config.js";
 import { createInterface } from "readline/promises";
 import { stdin as input, stdout as output } from "process";
-import * as userController from "./controllers/users.controller.js";
-import * as unitsController from "./controllers/units.controller.js";
-import * as productsController from "./controllers/products.controller.js";
-import startAdminApp from "./adminApp.js";
+// import * as userController from "./controllers/users.controller.js";
+// import * as unitsController from "./controllers/units.controller.js";
+// import * as productsController from "./controllers/products.controller.js";
+import startAdminApp from "./adminApp/adminApp.js";
 import displayMainMenu from "./displayMenu.js";
 // import startShopping from "./shoppingApp.js";
 
@@ -19,9 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 8080;
 app.listen(port);
 
-const rl = createInterface({ input, output });
+export const rl = createInterface({ input, output });
 
-startServer();
+startAdminApp();
 
 async function startServer() {
   console.log("Do you know the rules?");

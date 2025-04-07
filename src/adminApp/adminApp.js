@@ -1,18 +1,24 @@
-import * as productsController from "./controllers/products.controller.js";
-import displayMainMenu from "./displayMenu.js";
+import * as productsController from "../controllers/products.controller.js";
+// import rl from "../server.js";
+import viewAllProducts from "./viewAllProducts.js";
+import createNewProduct from "./createNewProduct.js";
+import updateProduct from "./updateProduct.js";
+import deleteProduct from "./deleteProduct.js";
+import viewAllUnits from "./viewAllUnits.js";
+import createNewUnit from "./createNewUnit.js";
 import { createInterface } from "readline/promises";
 import { stdin as input, stdout as output } from "process";
 
-const rl = createInterface({ input, output });
+export const rl = createInterface({ input, output });
 
 export default async function startAdminApp() {
   console.log("Welcome to the admin app!");
-  console.log("1. View all products");
-  console.log("2. Create a new product");
-  console.log("3. Update a product");
+  console.log("1. View all products ----(Done)");
+  console.log("2. Create a new product ----(Done)");
+  console.log("3. Update a product ----(need to be fixed)");
   console.log("4. Delete a product");
-  console.log("5. View all units");
-  console.log("6. Create a new unit");
+  console.log("5. View all units  ----(Done)");
+  console.log("6. Create a new unit ----(Done)");
   console.log("7. Update budget for an unit");
   console.log("8. Delete an unit");
   console.log("9. View all orders");
@@ -25,55 +31,55 @@ export default async function startAdminApp() {
   console.log("16. Exit");
 
   const answer = await rl.question("Please enter your answer: ");
-  console.log("Your answer is: ", answer);
 
   switch (answer) {
     case "1":
-      console.log("You have selected option 1");
-      const availableProducts = await productsController.getProductsNames();
-      console.log("Products: ", availableProducts);
-      // console.log("Products: ", await productController.getAllProducts());
+      try {
+        await viewAllProducts();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "2":
-      const productName = await rl.question("Please enter the product name: ");
-      const productCategory = await rl.question(
-        "Please enter the product category, you can choose between: electronics, clothing, food: "
-      );
-      const productPrice = await rl.question(
-        "Please enter the product price: "
-      );
-      const productStock = await rl.question(
-        "Please enter the product stock: "
-      );
-      const productExpirationDate = await rl.question(
-        "Please enter the product expiration date: "
-      );
-      const productStatus = await rl.question(
-        "Please enter the product status: "
-      );
-      await productsController.createProduct(
-        productName,
-        productCategory,
-        productPrice,
-        productStock,
-        productExpirationDate,
-        productStatus
-      );
+      try {
+        await createNewProduct();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
+      break;
+    case "3":
+      try {
+        await updateProduct();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "4":
-      const productNameToDelete = await rl.question(
-        "Please enter the product name to delete: "
-      );
-      await productsController.deleteProduct(productNameToDelete);
+      try {
+        await deleteProduct();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "5":
-      const units = await unitsController.getAllUnits();
-      console.log("Units: ", units);
+      try {
+        await viewAllUnits();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "6":
-      const unitName = await rl.question("Please enter the unit name: ");
-      const unitBudget = await rl.question("Please enter the unit budget: ");
-      await unitsController.createUnit(unitName, unitBudget);
+      try {
+        await createNewUnit();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "7":
       const unitNameToUpdate = await rl.question(
@@ -155,6 +161,6 @@ export default async function startAdminApp() {
     //   const newProductName = await rl.question("Please enter the new product name: ");
     default:
       console.log("Invalid answer. Please try again.");
-      displayMainMenu();
+      startAdminApp();
   }
 }
