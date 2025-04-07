@@ -1,7 +1,7 @@
 import Product from "../models/products.model.js";
 
 export default class ProductService {
-  getProducts = async () => {
+  async getProducts() {
     try {
       const products = await Product.find();
       return products;
@@ -9,9 +9,9 @@ export default class ProductService {
       console.error("Error getting products:", error);
       throw error;
     }
-  };
+  }
 
-  getProductById = async (id) => {
+  async getProductById(id) {
     try {
       const product = await Product.findById(id);
       return product;
@@ -19,22 +19,50 @@ export default class ProductService {
       console.error("Error getting product by Id:", error);
       throw error;
     }
-  };
-  getProductByName = async (name) => {
+  }
+
+  async findProductsByCategory(category) {
     try {
-      const product = await Product.findOne({ title: name });
-      return product;
+      const products = await Product.find({ category: category });
+      return products;
     } catch (error) {
-      console.error("Error getting product by name:", error);
+      console.error("Error getting products:", error);
       throw error;
     }
-  };
+  }
 
-  getProductsNames = async () => {
+  async getDefectiveProducts() {
+    try {
+      const products = await Product.find({ status: "Defective product" });
+      return products;
+    } catch (error) {
+      console.error("Error getting defective products:", error);
+      throw error;
+    }
+  }
+
+  async findProductsByExpirationDate(date) {
+    try {
+      const expiredProducts = [];
+      const products = await Product.find();
+      products.forEach((product) => {
+        const productExpirationDate = product.expirationDate;
+        if (productExpirationDate <= date) {
+          expiredProducts.push(product);
+        }
+      });
+      return expiredProducts;
+    } catch (error) {
+      console.error("Error getting products by expiration date:", error);
+      throw error;
+    }
+  }
+
+  async getAllProductsNamesAndIds() {
     try {
       const products = await Product.find();
       const productNames = products.map((product) => ({
-        Title: product.title,
+        title: product.title,
         id: product._id,
       }));
       return productNames;
@@ -42,9 +70,9 @@ export default class ProductService {
       console.error("Error getting products names:", error);
       throw error;
     }
-  };
+  }
 
-  createProduct = async (productData) => {
+  async createProduct(productData) {
     try {
       if (
         !productData.title ||
@@ -67,7 +95,7 @@ export default class ProductService {
       console.error("Error creating product:", error);
       throw error;
     }
-  };
+  }
 
   updateProduct = async (id, updateAttribute, newValue) => {
     try {
@@ -90,11 +118,9 @@ export default class ProductService {
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
         {
-          $set: {
-            [updateAttribute]: newValue,
-          },
+          [updateAttribute]: newValue,
         },
-        { new: true }
+        { new: true, runValidators: true }
       );
       return updatedProduct;
     } catch (error) {
@@ -102,7 +128,7 @@ export default class ProductService {
       throw error;
     }
   };
-  deleteProduct = async (id) => {
+  async deleteProduct(id) {
     try {
       await Product.findByIdAndDelete(id);
       return { message: "Product deleted successfully" };
@@ -110,8 +136,8 @@ export default class ProductService {
       console.error("Error deleting product:", error);
       throw error;
     }
-  };
-  modifyQuantityOnStock = async (id, newQuantity) => {
+  }
+  async modifyQuantityOnStock(id, newQuantity) {
     try {
       const product = await Product.findById(id);
       const newStock = product.stock + newQuantity;
@@ -129,8 +155,8 @@ export default class ProductService {
       console.error("Error modifying quantity to product:", error);
       throw error;
     }
-  };
-  verifyProduct = async (id, quantity) => {
+  }
+  async verifyProduct(id, quantity) {
     const product = Product.findById(id);
     if (!product) {
       throw new Error("Product not found");
@@ -156,5 +182,5 @@ export default class ProductService {
       throw new Error("Product is sold");
     }
     return product;
-  };
+  }
 }

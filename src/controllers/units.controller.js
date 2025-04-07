@@ -3,11 +3,9 @@ import UnitService from "../services/units.service.js";
 
 const unitService = new UnitService();
 
-export const updateUnit = async (req, res) => {
+export async function updateUnitBudget (unitId, budget) {
     try {
-        const { id } = req.params;
-        const { budget } = req.body;
-        const updatedUnit = await unitService.updateUnit(id, budget);
+        const updatedUnit = await unitService.updateUnitBudget(unitId, budget);
         res.status(200).json(updatedUnit);
     }
     catch (error) {

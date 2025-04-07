@@ -2,7 +2,7 @@ import Unit from "../models/units.model.js";
 import UserService from "./users.service.js";
 
 export default class UnitService {
-  async updateUnit(id, newBudget) {
+  async updateUnitBudget(id, newBudget) {
     try {
       const unit = await Unit.findByIdAndUpdate(
         id,

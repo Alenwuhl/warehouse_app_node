@@ -6,6 +6,10 @@ import updateProduct from "./updateProduct.js";
 import deleteProduct from "./deleteProduct.js";
 import viewAllUnits from "./viewAllUnits.js";
 import createNewUnit from "./createNewUnit.js";
+import viewAllOrders from "./viewAllOrders.js";
+import findProductsByCategory from "./findProductsByCategory.js";
+import findProductsByDefectiveProduct from "./findProductsByDefectiveProduct.js";
+import findProductsByExpirationDate from "./findProductsByExpirationDate.js";
 import { createInterface } from "readline/promises";
 import { stdin as input, stdout as output } from "process";
 
@@ -15,19 +19,19 @@ export default async function startAdminApp() {
   console.log("Welcome to the admin app!");
   console.log("1. View all products ----(Done)");
   console.log("2. Create a new product ----(Done)");
-  console.log("3. Update a product ----(need to be fixed)");
+  console.log("3. Update a product ----(i need to fix it))");
   console.log("4. Delete a product");
   console.log("5. View all units  ----(Done)");
   console.log("6. Create a new unit ----(Done)");
   console.log("7. Update budget for an unit");
-  console.log("8. Delete an unit");
+  console.log("8. Delete a unit");
   console.log("9. View all orders");
   console.log("10. Find orders by order number");
   console.log("11. Find orders by status");
   console.log("12. Find orders by product");
-  console.log("13. Find products by category");
-  console.log("14. Find products by defective product");
-  console.log("15. Find products by expiration date");
+  console.log("13. Find products by category ----(Done)");
+  console.log("14. Find products by defective product ----(Done)");
+  console.log("15. Find products by expiration date ----(Done)");
   console.log("16. Exit");
 
   const answer = await rl.question("Please enter your answer: ");
@@ -97,68 +101,60 @@ export default async function startAdminApp() {
       await unitsController.deleteUnit(unitNameToDelete);
       break;
     case "9":
-      const orders = await ordersController.getAllOrders();
-      console.log("Orders: ", orders);
+      try {
+        await viewAllOrders();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "10":
       const orderNumber = await rl.question("Please enter the order number: ");
-      const order = await ordersController.getOrderByNumber(orderNumber);
+      const order = await cartsController.getOrderByNumber(orderNumber);
       console.log("Order: ", order);
       break;
     case "11":
       const orderStatus = await rl.question("Please enter the order status: ");
-      const ordersByStatus = await ordersController.getOrdersByStatus(
+      const ordersByStatus = await cartsController.getOrdersByStatus(
         orderStatus
       );
       console.log("Orders: ", ordersByStatus);
       break;
     case "12":
       const orderProduct = await rl.question("Please enter the product name: ");
-      const ordersByProduct = await ordersController.getOrdersByProduct(
+      const ordersByProduct = await cartsController.getOrdersByProduct(
         orderProduct
       );
       console.log("Orders: ", ordersByProduct);
       break;
     case "13":
-      const orderCustomer = await rl.question(
-        "Please enter the customer name: "
-      );
-      const ordersByCustomer = await ordersController.getOrdersByCustomer(
-        orderCustomer
-      );
-      console.log("Orders: ", ordersByCustomer);
+      try {
+        await findProductsByCategory();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "14":
-      const orderDate = await rl.question("Please enter the order date: ");
-      const ordersByDate = await ordersController.getOrdersByDate(orderDate);
-      console.log("Orders: ", ordersByDate);
+      try {
+        await findProductsByDefectiveProduct();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "15":
-      const expirationDate = await rl.question(
-        "Please enter the expiration date: "
-      );
-      const productsByExpirationDate =
-        await productsController.getProductsByExpirationDate(expirationDate);
-      console.log(
-        `Products with expiration date on ${expirationDate}: `,
-        productsByExpirationDate
-      );
+      try {
+        await findProductsByExpirationDate();
+      } catch (error) {
+        console.error(error);
+        await startAdminApp();
+      }
       break;
     case "16":
       console.log("Exiting the admin app...");
       rl.close();
       return;
-
-    //   case "2":
-    //     const productName = await rl.question("Please enter the product name: ");
-    //     // const productCategory = await rl.question("Please enter the product category, you can choose between: electronics, clothing, food: ");
-    //     const productPrice = await rl.question("Please enter the product price: ");
-    //     const productStock = await rl.question("Please enter the product stock: ");
-    //     await productController.createProduct(productName, productCategory, productPrice, productStock);
-    //     console.log(`Product ${productName} created successfully.`);
-    //     break;
-    // case "3":
-    //   const newProductName = await rl.question("Please enter the new product name: ");
     default:
       console.log("Invalid answer. Please try again.");
       startAdminApp();

@@ -11,9 +11,9 @@ export async function getProducts() {
   }
 }
 
-export async function getProductsNames() {
+export async function getAllProductsNamesAndIds() {
   try {
-    const products = await productsService.getProductsNames();
+    const products = await productsService.getAllProductsNamesAndIds();
     return products;
   } catch (error) {
     console.error(error);
@@ -71,21 +71,50 @@ export async function createProduct(
     console.error(error);
   }
 }
-export async function updateProduct (productId, updateAttribute, updateValue) {
-    try {
-        const product = await productsService.getProductById(productId);
-        if (!product) {
-            throw new Error("Product not found");
-        }
-        const updatedProduct = await productsService.updateProduct(
-            productId,
-            updateAttribute,
-            updateValue
-        );
-        return updatedProduct;
-    } catch (error) {
-        console.error(error);
-    }}
+export async function updateProduct(productId, updateAttribute, updateValue) {
+  try {
+    const product = await productsService.getProductById(productId);
+    if (!product) {
+      throw new Error("Product not found");
+    }
+    const updatedProduct = await productsService.updateProduct(
+      productId,
+      updateAttribute,
+      updateValue
+    );
+    return updatedProduct;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function findProductsByCategory(category) {
+  try {
+    const products = await productsService.findProductsByCategory(category);
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getDefectiveProducts() {
+  try {
+    const products = await productsService.getDefectiveProducts();
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function findProductsByExpirationDate(expirationDate) {
+  try {
+    const date = new Date(expirationDate.year, expirationDate.month - 1, expirationDate.day);
+    const products = await productsService.findProductsByExpirationDate(date);
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function deleteProduct(name) {
   try {

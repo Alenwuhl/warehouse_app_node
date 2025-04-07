@@ -2,14 +2,17 @@ import CartsService from '../services/carts.service.js';
 
 const cartsService = new CartsService();
 
-export const getAllCarts = async (req, res) => {
+export async function getAllCarts() {
     try {
-        const carts = await cartsService.getAllCarts();
-        res.status(200).json(carts);
+        const carts = await cartsService.getCarts();
+        if (!carts) {
+            throw new Error('No orders found');
+            }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error fetching orders:', error);
+        throw error;
     }
-}
+}  
 export const getCartById = async (req, res) => {
     try {
         const id = req.params.id;
