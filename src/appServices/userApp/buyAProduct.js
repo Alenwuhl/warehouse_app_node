@@ -3,6 +3,7 @@ import rl from "../../config/readline.js";
 import * as cartsController from "../../controllers/cart.controller.js";
 import startShopping from "./shoppingApp.js";
 import modifyMyOrder from "./ModifyMyOrder.js";
+import finishPurchase from "./finishPurchase.js";
 import Product from "../../models/products.model.js";
 export default async function buyAProduct(unit) {
   try {
@@ -82,52 +83,6 @@ export default async function buyAProduct(unit) {
       console.log("You have not added this product to your cart!");
       console.log("Returning to the menu...");
       await startShopping(unit);
-    }
-  } catch (error) {
-    console.log("Error: ", error.message);
-  }
-}
-
-async function finishPurchase(cart) {
-  try {
-    const unit = await cartsController.getUnitById(cart.unitId);
-    if (unit.budget < cart.totalPrice) {
-      console.log("You don't have enough budget to complete this order.");
-      console.log("You will need to modify your order.");
-      await modifyMyOrder(cart, unit);
-      return;
-    }
-    let conditions = cart.items.map((i) => {
-      return {
-        _id: i.productId,
-        stock: { $gte: i.quantity },
-        status: "Working product",
-      };
-    });
-    let p = await Product.find({ $and: conditions });
-    if (p.length === cart.items.length) {
-      cart.status = "completed";
-      await cartsController.updateCart(cart._id, cart);
-      console.log("Your order has been completed!");
-      //updeteo stock
-      p.map((product) => {
-        product.stock -= cart.items.find((i) =>
-          i.productId.equals(product._id)
-        ).quantity;
-        product.save();
-      });
-    } else {
-      let unavailableProducts = cart.items.filter((i) => {
-        return !p.some((product) => product._id.equals(i.productId));
-      });
-      console.log("The following products are not available:");
-      unavailableProducts.forEach((item, index) => {
-        console.log(
-          `  ${index + 1}. Product ID: ${item.productId} - Quantity: ${
-            item.quantity
-          }`
-        );
-      });
     }
   } catch (error) {
     console.log("Error: ", error.message);

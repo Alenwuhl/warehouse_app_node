@@ -35,6 +35,14 @@ export async function getUnits() {
     console.error(error);
   }
 }
+export async function getUnitById(id) {
+  try {
+    const unit = await unitService.getUnitById(id);
+    return unit;
+  } catch (error) {
+    console.error(error);
+  }
+}
 export async function deleteUnit(id) {
   try {
     const unit = await unitService.deleteUnit(id);

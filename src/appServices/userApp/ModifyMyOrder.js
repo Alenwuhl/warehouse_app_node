@@ -5,7 +5,7 @@ import startShopping from "./shoppingApp.js";
 
 export default async function modifyMyOrder(unit){
     try {
-        const {cartId} = await cartsController.getActiveCart(unit);
+        const {cartId} = await cartsController.getActiveCart(unit.id);
         const cart = await cartsController.getCartById(cartId);
 
         console.log("This is your active order");

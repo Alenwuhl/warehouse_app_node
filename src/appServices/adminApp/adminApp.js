@@ -19,22 +19,22 @@ import getOrderbyNumber from "./getOrderbyNumber.js";
 
 export default async function startAdminApp() {
   console.log("Welcome to the admin app!");
-  console.log("1. View all products ----(Done)");
-  console.log("2. Create a new product ----(Done)");
-  console.log("3. Update a product ----(Done))");
-  console.log("4. Delete a product ----(Done)");
-  console.log("5. View all units  ----(Done)");
-  console.log("6. Create a new unit ----(Done)");
-  console.log("7. Update budget for an unit ----(Done)");
-  console.log("8. Delete a unit ----(Done)");
+  console.log("1. View all products");
+  console.log("2. Create a new product");
+  console.log("3. Update a product)");
+  console.log("4. Delete a product");
+  console.log("5. View all units");
+  console.log("6. Create a new unit");
+  console.log("7. Update budget for an unit");
+  console.log("8. Delete a unit");
   console.log(
     "9. Find orders by order number"
-  ); /* I dont have the orders !!!!!!!*/
-  console.log("10. Find orders by status ----(Done)");
-  console.log("11. Find orders by product"); /* I dont have the orders*/
-  console.log("12. Find products by category ----(Done)");
-  console.log("13. Find products by defective product ----(Done)");
-  console.log("14. Find products by expiration date ----(Done)");
+  ); 
+  console.log("10. Find orders by status");
+  console.log("11. Find orders by product"); 
+  console.log("12. Find products by category");
+  console.log("13. Find products by defective product");
+  console.log("14. Find products by expiration date");
   console.log("15. Logout");
 
   const answer = await rl.question("Please enter your answer: ");

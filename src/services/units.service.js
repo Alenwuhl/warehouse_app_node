@@ -18,6 +18,18 @@ export default class UnitService {
       throw error;
     }
   }
+  async getUnitById(id) {
+    try {
+      const unit = await Unit.findById(id);
+      if (!unit) {
+        throw new Error("Unit not found");
+      }
+      return unit;
+    } catch (error) {
+      console.error("Error getting unit:", error);
+      throw error;
+    }
+  }
   async returnUnitBudgetbyUserId(id) {
     try {
       const user = await UserService.findById(id);
