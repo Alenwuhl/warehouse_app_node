@@ -5,7 +5,8 @@ import rl from "../../config/readline.js"
 export default async function viewAllProducts() {
   try {
     const availableProducts = await productsController.getAllProductsNamesAndIds();
-    console.log("Products: ", availableProducts);
+    console.log("Products: ", availableProducts.map((p, i) => `${i + 1} - ${p.title}`));
+    
     const enter = await rl.question(
       "Press enter to return to the menu..."
     );

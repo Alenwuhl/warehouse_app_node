@@ -42,7 +42,21 @@ export default async function buyAProduct(unit) {
       console.log(
         `You've added ${quantity} of ${chooseProduct.title} to your cart`
       );
-      console.log(`Now your cart is: ${cart}`);
+      console.log(`Now your cart is: `);
+      console.log("------------------------------");
+      console.log(`Order number: ${cart.orderNumber}`);
+      console.log(`Status: ${cart.status}`);
+      console.log("Items:");
+      cart.items.forEach((item, index) => {
+        console.log(
+          `  ${index + 1}. Product ID: ${item.productId} - Quantity: ${
+            item.quantity
+          }`
+        );
+      });
+      console.log(`Total Price: $${cart.totalPrice}`);
+      console.log("------------------------------");
+
       console.log("What do you want to do?");
       console.log("1. Finish my order");
       console.log("2. Modify my order");
@@ -65,6 +79,8 @@ export default async function buyAProduct(unit) {
       }
     } else {
       console.log("You have not added this product to your cart!");
+      console.log("Returning to the menu...");
+      await startShopping(unit);
     }
   } catch (error) {
     console.log("Error: ", error.message);

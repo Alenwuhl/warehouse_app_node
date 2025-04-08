@@ -20,9 +20,54 @@ export default class CartsService {
       console.log("There is no active cart in your unit");
     }
   }
+  async getOrdersNumbers() {
+    try {
+      const orders = await Carts.find();
+      const orderNumbers = orders.map((order) => order.orderNumber);
+      if (!orderNumbers) {
+        console.log("No orders numbers found");
+      }
+      if (!orders) {
+        console.log("No orders found");
+      }
+      return orderNumbers;
+    }
+    catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error;
+    }
+  }
+  async getOrderByProductId(productId) {
+    try {
+      const orders = await Carts.find({
+        items: { $elemMatch: { productId: productId } },
+      });
+
+      if (!orders) {
+        console.log("No orders found");
+      }
+      return orders;
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error;
+    }
+  }
+
+  async getOrdersByStatus(status) {
+    try {
+      const orders = await Carts.find({ status: status });
+      if (!orders) {
+        console.log("No orders found");
+      }
+      return orders;
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error;
+    }
+  }
   async AddProductToCart(productId, quantity, activeCart, unit) {
     try {
-      // const cart = await Carts.findById(activeCart);
+      // const totalPrice =
       await productsService.verifyThePurchase(productId, quantity, unit);
 
       await Carts.updateOne(
@@ -33,6 +78,7 @@ export default class CartsService {
           },
         }
       );
+
       return activeCart;
     } catch (error) {
       console.log("The product could not be added to your cart");
@@ -41,7 +87,7 @@ export default class CartsService {
     }
   }
 
-  getCarts = async () => {
+  async getCarts() {
     try {
       const carts = await Carts.find();
       return carts;
@@ -49,11 +95,9 @@ export default class CartsService {
       console.error(error);
       return { error: "Error fetching carts" };
     }
-  };
+  }
   async getCartById(id) {
     try {
-      console.log("getCartById service: ", id);
-
       return await Carts.findById(id);
     } catch (error) {
       console.error(error);
@@ -69,6 +113,18 @@ export default class CartsService {
       return { error: "Error fetching cart by user ID" };
     }
   };
+  async getOrderByNumber(orderNumber) {
+    try {
+      const order = await Carts.findOne({ orderNumber });
+      if (!order) {
+        console.log("Order not found");
+      }
+      return order;
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+      throw error;
+    }
+  }
   async createCart(cartData) {
     try {
       const newCart = await Carts.create(cartData);

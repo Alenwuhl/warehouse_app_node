@@ -125,7 +125,7 @@ export async function findProductsByExpirationDate(expirationDate) {
 
 export async function AddToTheCart(productId, quantity, unit) {
   try{
-  
+  const orderNnumber = Math.floor(Math.random() * 1000000)
   const activeCart = await cartService.activeCart(unit)
   const cartId = activeCart.cartId
 
@@ -135,6 +135,7 @@ export async function AddToTheCart(productId, quantity, unit) {
   } else {
     const newCart = {
       items: [],
+      orderNumber: orderNnumber,
       totalPrice: 0,
       unitId: unit,
       status: "active"

@@ -6,7 +6,7 @@ import rl from "../../config/readline.js"
 export default async function viewAllUnits(){
     try{
         const units = await unitsController.getAllUnitsNames();
-        console.log("Units: ", units);
+        console.log("Units: ", units.map((p, i) => `${i + 1} - ${p.name}`));
     const enter = await rl.question(
       "Press enter to return to the menu..."
     );

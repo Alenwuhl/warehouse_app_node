@@ -20,10 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 8080;
 app.listen(port);
 
-
-
-const testId = "67f26a75a858a5ab1cce857f";
-startShopping(testId);
+// const testId = "67f26a75a858a5ab1cce857f";
+startAdminApp();
 
 async function startServer() {
   console.log("Do you know the rules?");

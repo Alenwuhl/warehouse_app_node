@@ -8,11 +8,25 @@ export async function getAllCarts() {
     if (!carts) {
       throw new Error("No orders found");
     }
+    return carts;
   } catch (error) {
     console.error("Error fetching orders:", error);
     throw error;
   }
 }
+export async function getAllOrdersNumbers() {
+  try {
+    const orders = await cartsService.getOrdersNumbers();
+    if (!orders) {
+      console.log("No orders found");
+    }
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+}
+
 export async function getCartById(id) {
   try {
     const cart = await cartsService.getCartById(id);
@@ -25,15 +39,67 @@ export async function getCartById(id) {
   }
 }
 
-export const createCart = async (req, res) => {
+export async function getOrderByNumber(orderNumber) {
   try {
-    const cart = req.body;
-    const newCart = await cartsService.createCart(cart);
-    res.status(201).json(newCart);
+    const order = await cartsService.getOrderByNumber(orderNumber);
+    if (!order) {
+      console.log("Order not found");
+    }
+    return order;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error fetching orders:", error);
+    throw error;
   }
-};
+}
+
+export async function getOrdersByStatus(status) {
+  try {
+    const orders = await cartsService.getOrdersByStatus(status);
+    if (!orders) {
+      console.log("No orders found");
+    }
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+}
+
+export async function getOrderByProductId(productId) {
+  try {
+    const orders = await cartsService.getOrderByProductId(productId);
+    if (!orders) {
+      console.log("No orders found");
+    }
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+}
+
+export async function getOrderByProduct(productId) {
+  try {
+    const orders = await cartsService.getOrderByProductId(productId);
+    if (!orders) {
+      console.log("No orders found");
+    }
+    return orders;
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    throw error;
+  }
+}
+
+// export const createCart = async (req, res) => {
+//   try {
+//     const cart = req.body;
+//     const newCart = await cartsService.createCart(cart);
+//     res.status(201).json(newCart);
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// };
 export const updateCart = async (req, res) => {
   try {
     const id = req.params.id;
@@ -47,18 +113,18 @@ export const updateCart = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const deleteCart = async (req, res) => {
+export async function deleteCart(id) {
   try {
-    const id = req.params.id;
     const deletedCart = await cartsService.deleteCart(id);
     if (!deletedCart) {
       return res.status(404).json({ message: "Cart not found" });
     }
-    res.status(200).json(deletedCart);
+    return deletedCart;
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error deleting cart:", error);
+    throw error;
   }
-};
+}
 export const getCartByStatus = async (req, res) => {
   try {
     const status = req.params.status;

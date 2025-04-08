@@ -150,8 +150,6 @@ export default class ProductService {
   }
   
   async verifyThePurchase(id, quantity, unitId) {
-    
-    const unit = await Unit.findById(unitId);
     const product = await Product.findById(id);
     const productId = product.id
     if (!product) {
@@ -177,12 +175,7 @@ export default class ProductService {
       console.log("You will not be able to buy this product!");
       throw new Error("Product is sold");
     }
-    const totalPrice = product.price * quantity
-    if (totalPrice > unit) {
-      console.log("You will not be able to buy this product!");
-      throw new Error("Your budget your budget is not enough")
-    }
     
-    return productId, quantity, unit;
+    return productId, quantity, unitId;
   }
 }

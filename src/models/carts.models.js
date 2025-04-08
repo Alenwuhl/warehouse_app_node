@@ -7,6 +7,10 @@ const CartItemSchema = {
 
 const CartSchema = {
   items: [CartItemSchema],
+  orderNumber: {
+    type: Number,
+    required: true,
+  },
   totalPrice: {
     type: Number,
   },
@@ -17,7 +21,7 @@ const CartSchema = {
   status: {
     type: String,
     required: true,
-    enum: ["active", "send", "completed"],
+    enum: ["active", "completed"],
   }
 };
 
