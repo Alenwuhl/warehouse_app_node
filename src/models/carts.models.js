@@ -1,19 +1,16 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const cartSchemma = {
-  products: {
-    type: Array,
-    foreignKey: "products",
-    ref: "products",
-    required: true,
-    default: [],
-  },
+const CartItemSchema = {
+  productId: { type: String, ref: 'Product', required: true },
+  quantity: { type: Number, required: true, min: 1 }
+};
+
+const CartSchema = {
+  items: [CartItemSchema],
   totalPrice: {
     type: Number,
-    required: true,
-    default: 0,
   },
-  user: {
+  unitId: {
     type: String,
     required: true,
   },
@@ -21,7 +18,9 @@ const cartSchemma = {
     type: String,
     required: true,
     enum: ["active", "send", "completed"],
-  },
+  }
 };
-const Cart = mongoose.model("Cart", cartSchemma);
-export default Cart;
+
+const Carts = mongoose.model('Cart', CartSchema);
+
+export default Carts 

@@ -1,30 +1,72 @@
 import * as productsController from "../../controllers/products.controller.js";
-import rl from "../../config/readline.js"
+import rl from "../../config/readline.js";
+import * as cartsController from "../../controllers/cart.controller.js";
 import startShopping from "./shoppingApp.js";
 
 export default async function buyAProduct(unit) {
-    try {
-        const products = await productsController.getAllProductsNamesAndIds();
-        console.log(`This is the list of products: 
-            ${products.map((p, i) => `${i + 1}. ${p.title} - ${p.price}`).join("\n")}`);
-            let chooseProduct = await rl.question("- ");
-        while (chooseProduct < 1 || chooseProduct > products.length) {
-            console.log("Invalid choice. Please enter a valid number");
-            console.log(`This is the list of products: 
-                ${products.map((p, i) => `${i + 1}. ${p.title} - ${p.price}`).join("\n")}`);
-            chooseProduct = await rl.question("- ");
-        }
-        chooseProduct = products[chooseProduct - 1].id;
-        const quantity = await rl.question("Please enter the quantity you want to buy: ");
-        // todo tomorrow
-        const buyProduct = await productsController.buyAProduct(chooseProduct, quantity, unit);
-        if (buyProduct) {
-            console.log("You have successfully bought the product");
-            await startShopping(unit);
-        } else {
-            console.log("You have not bought the product");
-        }
-    } catch (error) {
-        console.log("Error: ", error.message);
-    }}
-        
+  try {
+    const products = await productsController.getProducts();
+    console.log(
+      `This is the list of products, choose which one you want to buy: `
+    );
+    console.log("------------------------------");
+
+    console.log(
+      `${products
+        .map((p, i) => ` ${i + 1}. ${p.title} - $${p.price}`)
+        .join("\n")}`
+    );
+    let chooseProduct = await rl.question("- ");
+    while (chooseProduct < 1 || chooseProduct > products.length) {
+      console.log("Invalid choice. Please enter a valid number");
+      console.log(`This is the list of products: 
+                ${products
+                  .map((p, i) => `${i + 1}. ${p.title} - ${p.price}`)
+                  .join("\n")}`);
+      chooseProduct = await rl.question("- ");
+    }
+    chooseProduct = products[chooseProduct - 1];
+    const quantityString = await rl.question(
+      "Please enter the quantity you want to buy: "
+    );
+    const quantity = parseInt(quantityString);
+
+    const cartId = await productsController.AddToTheCart(
+      chooseProduct.id,
+      quantity,
+      unit
+    );
+
+    if (cartId) {
+      const cart = await cartsController.getCartById(cartId);
+      console.log(
+        `You've added ${quantity} of ${chooseProduct.title} to your cart`
+      );
+      console.log(`Now your cart is: ${cart}`);
+      console.log("What do you want to do?");
+      console.log("1. Finish my order");
+      console.log("2. Modify my order");
+      console.log("3. Return to the menu");
+
+      const answer = await rl.question("- ");
+
+      switch (answer) {
+        case "1":
+          await finishPurchase();
+          break;
+        case "2":
+          await ModifyMyOrder();
+          break;
+        case "3":
+          await startShopping();
+          break;
+        default:
+          break;
+      }
+    } else {
+      console.log("You have not added this product to your cart!");
+    }
+  } catch (error) {
+    console.log("Error: ", error.message);
+  }
+}

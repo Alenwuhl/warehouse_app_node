@@ -1,6 +1,8 @@
 import ProductService from "../services/products.service.js";
+import CartService from "../services/carts.service.js"
 
 const productsService = new ProductService();
+const cartService = new CartService();
 
 export async function getProducts() {
   try {
@@ -19,9 +21,18 @@ export async function getAllProductsNamesAndIds() {
     console.error(error);
   }
 }
+export async function getProductsbyIds(cart) {
+  try {
+    const pArrays = await productsService.getProductsbyIds(cart)
+    return pArrays
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 export async function getProductById(id) {
   try {
+    debugger
     const product = await productsService.getProductById(id);
     if (!product) {
       throw new Error("Product not found");
@@ -100,13 +111,56 @@ export async function getDefectiveProducts() {
 
 export async function findProductsByExpirationDate(expirationDate) {
   try {
-    const date = new Date(expirationDate.year, expirationDate.month - 1, expirationDate.day);
+    const date = new Date(
+      expirationDate.year,
+      expirationDate.month - 1,
+      expirationDate.day
+    );
     const products = await productsService.findProductsByExpirationDate(date);
     return products;
   } catch (error) {
     console.error(error);
   }
 }
+
+export async function AddToTheCart(productId, quantity, unit) {
+  try{
+  
+  const activeCart = await cartService.activeCart(unit)
+  const cartId = activeCart.cartId
+
+  
+  if (activeCart) {
+    return  await cartService.AddProductToCart(productId, quantity, cartId, unit)
+  } else {
+    const newCart = {
+      items: [],
+      totalPrice: 0,
+      unitId: unit,
+      status: "active"
+    }
+    await cartService.createCart(newCart)
+    return await cartService.AddProductToCart(productId, quantity, cartId, unit)
+  }}catch (error) {
+    console.error(error)
+  }
+
+}
+
+// export async function buyAProduct(productId, quantity, unit) {
+//   try {
+//     const cartItem = await productsService.verifyThePurchase(
+//       productId,
+//       quantity,
+//       unit
+//     );
+//     if (cartItem) {
+//       return (productToBuy = await productsService.buyAProduct(cartItem));
+//     }
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 
 export async function deleteProduct(id) {
   try {

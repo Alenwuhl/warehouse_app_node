@@ -1,4 +1,5 @@
 import Product from "../models/products.model.js";
+import Unit from "../models/units.model.js"
 
 export default class ProductService {
   async getProducts() {
@@ -8,6 +9,16 @@ export default class ProductService {
     } catch (error) {
       console.error("Error getting products:", error);
       throw error;
+    }
+  }
+
+  async getProductsbyIds(cart) {
+    try {
+      const itemIds = cart.items.map(i => i.productId);
+      const products = await Product.find({_id: { $in: itemIds}})
+      return products
+    } catch (error) {
+      
     }
   }
 
@@ -137,27 +148,12 @@ export default class ProductService {
       throw error;
     }
   }
-  async modifyQuantityOnStock(id, newQuantity) {
-    try {
-      const product = await Product.findById(id);
-      const newStock = product.stock + newQuantity;
-      const updatedProduct = await Product.findByIdAndUpdate(
-        id,
-        { $inc: { stock: newStock } },
-        { new: true }
-      );
-      console.log(
-        "The product stock has been updated, the new stock is: ",
-        updatedProduct.stock
-      );
-      return updatedProduct;
-    } catch (error) {
-      console.error("Error modifying quantity to product:", error);
-      throw error;
-    }
-  }
-  async verifyProduct(id, quantity) {
-    const product = Product.findById(id);
+  
+  async verifyThePurchase(id, quantity, unitId) {
+    
+    const unit = await Unit.findById(unitId);
+    const product = await Product.findById(id);
+    const productId = product.id
     if (!product) {
       throw new Error("Product not found");
     }
@@ -181,6 +177,12 @@ export default class ProductService {
       console.log("You will not be able to buy this product!");
       throw new Error("Product is sold");
     }
-    return product;
+    const totalPrice = product.price * quantity
+    if (totalPrice > unit) {
+      console.log("You will not be able to buy this product!");
+      throw new Error("Your budget your budget is not enough")
+    }
+    
+    return productId, quantity, unit;
   }
 }

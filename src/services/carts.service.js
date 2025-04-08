@@ -2,7 +2,45 @@ import Carts from "../models/carts.models.js";
 import * as unitsController from "../controllers/units.controller.js";
 import ProductService from "./products.service.js";
 
+const productsService = new ProductService();
+
 export default class CartsService {
+  async activeCart(unit) {
+    try {
+      const cart = await Carts.findOne({ unitId: unit, status: "active" });
+
+      if (cart) {
+        const cartId = cart.id;
+
+        return { cartId, unit };
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.log("There is no active cart in your unit");
+    }
+  }
+  async AddProductToCart(productId, quantity, activeCart, unit) {
+    try {
+      // const cart = await Carts.findById(activeCart);
+      await productsService.verifyThePurchase(productId, quantity, unit);
+
+      await Carts.updateOne(
+        { _id: activeCart },
+        {
+          $push: {
+            items: [{ productId: productId, quantity: quantity }],
+          },
+        }
+      );
+      return activeCart;
+    } catch (error) {
+      console.log("The product could not be added to your cart");
+      console.log(error);
+      throw error;
+    }
+  }
+
   getCarts = async () => {
     try {
       const carts = await Carts.find();
@@ -12,15 +50,16 @@ export default class CartsService {
       return { error: "Error fetching carts" };
     }
   };
-  getCartById = async (id) => {
+  async getCartById(id) {
     try {
-      const cart = await Carts.findById(id);
-      return cart;
+      console.log("getCartById service: ", id);
+
+      return await Carts.findById(id);
     } catch (error) {
       console.error(error);
       return { error: "Error fetching cart by ID" };
     }
-  };
+  }
   getCartByUserId = async (userId) => {
     try {
       const cart = await Carts.findOne({ user: userId });
@@ -29,8 +68,8 @@ export default class CartsService {
       console.error(error);
       return { error: "Error fetching cart by user ID" };
     }
-  }
-  createCart = async (cartData) => {
+  };
+  async createCart(cartData) {
     try {
       const newCart = await Carts.create(cartData);
       return newCart;
@@ -38,7 +77,7 @@ export default class CartsService {
       console.error(error);
       return { error: "Error creating cart" };
     }
-  };
+  }
   updateCart = async (id, cartData) => {
     try {
       const updatedCart = await Carts.findByIdAndUpdate(id, cartData, {
@@ -78,23 +117,26 @@ export default class CartsService {
       return { error: "Error fetching carts by product id" };
     }
   };
-  addProductToCart = async (cartId, productId, quantity, price) => {
-    try {
-      const cart = await Carts.findById(cartId);
-      if (!cart) {
-        throw new Error("Cart not found");
-      }
-      const productService = new ProductService();
-      const product = await productService.verifyProduct(productId, quantity);
-      cart.products.push(product.productId, product.quantity, product.price);
-      // cart.totalPrice += quantity * price;
-      await cart.save();
-      return cart;
-    } catch (error) {
-      console.error(error);
-      return { error: "Error adding product to cart" };
-    }
-  };
+  // async addProductToCart(cartItem) {
+  //   try {
+  //     const unitId = cartItem.unitId;
+  //     const cart = await Carts.find({ unitId: unitId, status: "active" });
+  //     if (!cart) {
+  //       const cartData = {
+  //         items: {
+  //           productId: cartItem.productId,
+  //           quantity: cartItem.quantity,
+  //         },
+  //         unitId: unitId,
+  //         status: "active",
+  //       };
+  //       const newCart = await CartsService.createCart(cartData);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     return { error: "Error adding product to cart" };
+  //   }
+  // }
   finishCart = async (cartId) => {
     try {
       const cart = await Carts.findById(cartId);
@@ -102,14 +144,16 @@ export default class CartsService {
         throw new Error("Cart not found");
       }
       const unitBudget = await Unit.returnUnitBudget(cart.user);
-      if(unitBudget.budget < cart.totalPrice){
+      if (unitBudget.budget < cart.totalPrice) {
         throw new Error("Not enough budget");
       }
       cart.status = "completed";
       console.log("Your order has been completed");
-      console.log("Your order will be delivered to your unit, from now, you cannot modify it");
-      console.log( cart.totalPrice + " will be deducted from your budget");
-      console.log( "Thank you for your purchase");
+      console.log(
+        "Your order will be delivered to your unit, from now, you cannot modify it"
+      );
+      console.log(cart.totalPrice + " will be deducted from your budget");
+      console.log("Thank you for your purchase");
       await cart.save();
       return cart;
     } catch (error) {
