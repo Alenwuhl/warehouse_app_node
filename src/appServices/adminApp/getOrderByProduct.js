@@ -4,7 +4,7 @@ import * as cartController from "../../controllers/cart.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js";
 
-export default async function getOrderByProduct(productId) {
+export default async function getOrderByProduct() {
   try {
     const products = await productsController.getAllProductsNamesAndIds();
     if (!products) {
@@ -21,7 +21,15 @@ export default async function getOrderByProduct(productId) {
         .join("\n")
     );
 
-const productId = '67f3b86568b07355a681139a'
+    console.log("Please enter the product: ");
+    let productId = await rl.question("- ");
+    while (productId < 1 || productId > products.length) {
+      console.log("Invalid choice. Please enter a valid number");
+      console.log(`This is the list of products: 
+                ${products.map((p, i) => `${i + 1}. ${p.title}`).join("\n")}`);
+      productId = await rl.question("- ");
+    }
+    productId = products[productId - 1].id;
 
     const orders = await cartController.getOrderByProductId(productId);
     if (!orders) {

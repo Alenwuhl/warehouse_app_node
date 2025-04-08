@@ -123,46 +123,6 @@ export async function findProductsByExpirationDate(expirationDate) {
   }
 }
 
-export async function AddToTheCart(productId, quantity, unit) {
-  try{
-  const orderNnumber = Math.floor(Math.random() * 1000000)
-  const activeCart = await cartService.activeCart(unit)
-  const cartId = activeCart.cartId
-
-  
-  if (activeCart) {
-    return  await cartService.AddProductToCart(productId, quantity, cartId, unit)
-  } else {
-    const newCart = {
-      items: [],
-      orderNumber: orderNnumber,
-      totalPrice: 0,
-      unitId: unit,
-      status: "active"
-    }
-    await cartService.createCart(newCart)
-    return await cartService.AddProductToCart(productId, quantity, cartId, unit)
-  }}catch (error) {
-    console.error(error)
-  }
-
-}
-
-// export async function buyAProduct(productId, quantity, unit) {
-//   try {
-//     const cartItem = await productsService.verifyThePurchase(
-//       productId,
-//       quantity,
-//       unit
-//     );
-//     if (cartItem) {
-//       return (productToBuy = await productsService.buyAProduct(cartItem));
-//     }
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
-
 export async function deleteProduct(id) {
   try {
     const deletedProduct = await productsService.deleteProduct(id);

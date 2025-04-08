@@ -20,8 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 const port = process.env.PORT || 8080;
 app.listen(port);
 
-// const testId = "67f26a75a858a5ab1cce857f";
-startAdminApp();
+startServer();
 
 async function startServer() {
   console.log("Do you know the rules?");
@@ -29,24 +28,32 @@ async function startServer() {
   console.log("2. No, I don't know the rules.");
 
   const answer = await rl.question("Please enter your answer: ");
-  
+
   if (answer === "1") {
     console.log("Great! Let's start.");
     await displayMainMenu();
     rl.close();
   } else if (answer === "2") {
     console.log("Please read the rules before proceeding.");
-    console.log("- If you are a unit member, you can only see your own unit's budget.");
+    console.log(
+      "- If you are a unit member, you can only see your own unit's budget."
+    );
     console.log("- You can buy products from the store.");
     console.log("- You can only buy products if you have enough budget.");
     console.log("- You can modify your order until it is completed.");
     console.log("- You can only see your own orders.");
-    console.log("----------------------------------------------------------------");
+    console.log(
+      "----------------------------------------------------------------"
+    );
     console.log("If you are an admin, you can see all the products and units.");
     console.log("- You can also create, update and delete products.");
     console.log("- You can also create, update and delete units.");
-    console.log("- You can find the orders by order number, status or for an specific product.");
-    console.log("- You can find products by category, by defective product or by expiration date.");
+    console.log(
+      "- You can find the orders by order number, status or for an specific product."
+    );
+    console.log(
+      "- You can find products by category, by defective product or by expiration date."
+    );
 
     console.log("This is the end of the rules, do you want to continue?");
     console.log("1. Yes, I want to continue.");

@@ -8,10 +8,8 @@ export default class CartsService {
   async activeCart(unit) {
     try {
       const cart = await Carts.findOne({ unitId: unit, status: "active" });
-
       if (cart) {
         const cartId = cart.id;
-
         return { cartId, unit };
       } else {
         return false;
@@ -20,6 +18,7 @@ export default class CartsService {
       console.log("There is no active cart in your unit");
     }
   }
+
   async getOrdersNumbers() {
     try {
       const orders = await Carts.find();
@@ -31,12 +30,12 @@ export default class CartsService {
         console.log("No orders found");
       }
       return orderNumbers;
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Error fetching orders:", error);
       throw error;
     }
   }
+
   async getOrderByProductId(productId) {
     try {
       const orders = await Carts.find({
@@ -65,21 +64,40 @@ export default class CartsService {
       throw error;
     }
   }
-  async AddProductToCart(productId, quantity, activeCart, unit) {
+
+  async addProductToCart(productId, quantity, unit) {
     try {
-      // const totalPrice =
-      await productsService.verifyThePurchase(productId, quantity, unit);
-
-      await Carts.updateOne(
-        { _id: activeCart },
-        {
-          $push: {
-            items: [{ productId: productId, quantity: quantity }],
-          },
+      const { cartId } = await this.activeCart(unit);
+      let cart = await Carts.findById(cartId);
+      if (!cart) {
+        const orderNnumber = Math.floor(Math.random() * 1000000);
+        cart = await this.createCart({
+          items: [],
+          orderNumber: orderNnumber,
+          totalPrice: 0,
+          unitId: unit,
+          status: "active",
+        });
+      }
+      if (cart.items && cart.items.length > 0) {
+        const index = cart.items.findIndex(
+          (item) => item.productId === productId
+        );
+        if (index !== -1) {
+          cart.items[index].quantity += quantity;
+        } else {
+          cart.items = [
+            ...cart.items,
+            { productId: productId, quantity: quantity },
+          ];
         }
-      );
-
-      return activeCart;
+      } else {
+        cart.items = [{ productId: productId, quantity: quantity }];
+      }
+      const product = await productsService.getProductById(productId);
+      cart.totalPrice += ( product.price * quantity );
+      await cart.save();
+      return cart.id;
     } catch (error) {
       console.log("The product could not be added to your cart");
       console.log(error);
@@ -96,6 +114,7 @@ export default class CartsService {
       return { error: "Error fetching carts" };
     }
   }
+
   async getCartById(id) {
     try {
       return await Carts.findById(id);
@@ -104,6 +123,7 @@ export default class CartsService {
       return { error: "Error fetching cart by ID" };
     }
   }
+
   getCartByUserId = async (userId) => {
     try {
       const cart = await Carts.findOne({ user: userId });
@@ -113,6 +133,7 @@ export default class CartsService {
       return { error: "Error fetching cart by user ID" };
     }
   };
+
   async getOrderByNumber(orderNumber) {
     try {
       const order = await Carts.findOne({ orderNumber });
@@ -125,6 +146,7 @@ export default class CartsService {
       throw error;
     }
   }
+
   async createCart(cartData) {
     try {
       const newCart = await Carts.create(cartData);
@@ -134,17 +156,36 @@ export default class CartsService {
       return { error: "Error creating cart" };
     }
   }
-  updateCart = async (id, cartData) => {
+
+  async updateCart(id, updateValue) {
     try {
-      const updatedCart = await Carts.findByIdAndUpdate(id, cartData, {
-        new: true,
-      });
+      const updatedCart = await Carts.findByIdAndUpdate(id, updateValue);
       return updatedCart;
     } catch (error) {
       console.error(error);
       return { error: "Error updating cart" };
     }
-  };
+  }
+  async deleteProductFromCart(productId, cartId) {
+    try {
+      const cart = await Carts.findById(cartId);
+      if (!cart) {
+        throw new Error("Cart not found");
+      }
+      const productIndex = cart.items.findIndex(
+        (item) => item.productId === productId
+      );
+      if (productIndex === -1) {
+        throw new Error("Product not found in cart");
+      }
+      cart.items.splice(productIndex, 1);
+      await cart.save();
+      return cart;
+    } catch (error) {
+      console.error(error);
+      return { error: "Error deleting product from cart" };
+    }
+  }
 
   deleteCart = async (id) => {
     try {
@@ -155,6 +196,7 @@ export default class CartsService {
       return { error: "Error deleting cart" };
     }
   };
+
   getCartByStatus = async (status) => {
     try {
       const carts = await Carts.find({ status });
@@ -164,6 +206,7 @@ export default class CartsService {
       return { error: "Error fetching carts by status" };
     }
   };
+
   getCartByProductId = async (productId) => {
     try {
       const carts = await Carts.find({ product: productId });
@@ -171,50 +214,6 @@ export default class CartsService {
     } catch (error) {
       console.error(error);
       return { error: "Error fetching carts by product id" };
-    }
-  };
-  // async addProductToCart(cartItem) {
-  //   try {
-  //     const unitId = cartItem.unitId;
-  //     const cart = await Carts.find({ unitId: unitId, status: "active" });
-  //     if (!cart) {
-  //       const cartData = {
-  //         items: {
-  //           productId: cartItem.productId,
-  //           quantity: cartItem.quantity,
-  //         },
-  //         unitId: unitId,
-  //         status: "active",
-  //       };
-  //       const newCart = await CartsService.createCart(cartData);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //     return { error: "Error adding product to cart" };
-  //   }
-  // }
-  finishCart = async (cartId) => {
-    try {
-      const cart = await Carts.findById(cartId);
-      if (!cart) {
-        throw new Error("Cart not found");
-      }
-      const unitBudget = await Unit.returnUnitBudget(cart.user);
-      if (unitBudget.budget < cart.totalPrice) {
-        throw new Error("Not enough budget");
-      }
-      cart.status = "completed";
-      console.log("Your order has been completed");
-      console.log(
-        "Your order will be delivered to your unit, from now, you cannot modify it"
-      );
-      console.log(cart.totalPrice + " will be deducted from your budget");
-      console.log("Thank you for your purchase");
-      await cart.save();
-      return cart;
-    } catch (error) {
-      console.error(error);
-      return { error: "Error finishing cart" };
     }
   };
 }

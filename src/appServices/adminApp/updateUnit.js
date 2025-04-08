@@ -5,8 +5,7 @@ import rl from "../../config/readline.js";
 export default async function updateUnit() {
   try {
     const units = await unitsController.getUnits();
-    console.log(`Please enter the unit to update: 
-            ${units
+    console.log(`Please enter the unit to update: \n${units
               .map((unit, i) => `${i + 1}. ${unit.name} - ${unit.budget}`)
               .join("\n")}`);
     let unitIdToUpdate = await rl.question("- ");
