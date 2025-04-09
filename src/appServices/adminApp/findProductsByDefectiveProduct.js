@@ -1,14 +1,22 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
-import rl from "../../config/readline.js"
+import rl from "../../config/readline.js";
 
 export default async function findProductsByDefectiveProduct() {
   try {
     const defectiveProducts = await productsController.getDefectiveProducts();
-    console.log("Defective Products: ", defectiveProducts.map((p, i ) => `${i + 1} - ${p.title}`));
-    const enter = await rl.question(
-      "Press enter to return to the menu..."
-    );
+    console.log("Defective Products: ");
+    console.log("------------------------------");
+    defectiveProducts.forEach((product) => {
+      console.log(`ID: ${product._id}`);
+      console.log(`Name: ${product.title}`);
+      console.log(`Description: ${product.description}`);
+      console.log(`Category: ${product.category}`);
+      console.log(`Price: ${product.price}`);
+      console.log(`Stock: ${product.stock}`);
+      console.log("------------------------------");
+    });
+    const enter = await rl.question("Press enter to return to the menu...");
     if (enter === "") {
       await startAdminApp();
     }

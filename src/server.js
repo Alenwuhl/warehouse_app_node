@@ -61,10 +61,8 @@ async function startServer() {
     const continueAnswer = await rl.question("Please enter your answer: ");
     if (continueAnswer === "1") {
       console.log("Great! Let's start.");
-      rl.close();
       await displayMainMenu();
     } else if (continueAnswer === "2") {
-      rl.close();
       return;
     } else {
       console.log("Invalid answer. Please try again.");

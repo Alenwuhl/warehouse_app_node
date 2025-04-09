@@ -21,88 +21,51 @@ export default async function startAdminApp() {
   console.log("Welcome to the admin app!");
   console.log("1. View all products");
   console.log("2. Create a new product");
-  console.log("3. Update a product)");
+  console.log("3. Update a product");
   console.log("4. Delete a product");
   console.log("5. View all units");
   console.log("6. Create a new unit");
   console.log("7. Update budget for an unit");
   console.log("8. Delete a unit");
-  console.log(
-    "9. Find orders by order number"
-  ); 
+  console.log("9. Find orders by order number");
   console.log("10. Find orders by status");
-  console.log("11. Find orders by product"); 
+  console.log("11. Find orders by product");
   console.log("12. Find products by category");
   console.log("13. Find products by defective product");
   console.log("14. Find products by expiration date");
   console.log("15. Logout");
 
-  const answer = await rl.question("Please enter your answer: ");
+  let answer = await rl.question("Please enter your answer: ");
+
+  while (isNaN(answer) || answer < 1 || answer > 15) {
+    console.log("Invalid answer. Please enter a number between 1 and 15.");
+    answer = await rl.question("Please enter your answer: ");
+  }
 
   switch (answer) {
     case "1":
-      try {
-        await viewAllProducts();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
+      await viewAllProducts();
       break;
     case "2":
-      try {
-        await createNewProduct();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
+      await createNewProduct();
       break;
     case "3":
-      try {
         await updateProduct();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "4":
-      try {
         await deleteProduct();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "5":
-      try {
         await viewAllUnits();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "6":
-      try {
         await createNewUnit();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "7":
-      try {
         await updateUnit();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "8":
-      try {
         await deleteUnit();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "9":
       await getOrderbyNumber();
@@ -114,35 +77,20 @@ export default async function startAdminApp() {
       await getOrderByProduct();
       break;
     case "12":
-      try {
         await findProductsByCategory();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "13":
-      try {
         await findProductsByDefectiveProduct();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "14":
-      try {
         await findProductsByExpirationDate();
-      } catch (error) {
-        console.error(error);
-        await startAdminApp();
-      }
       break;
     case "15":
       console.log("Exiting the admin app...");
-      displayMainMenu();
+      await displayMainMenu();
       return;
     default:
       console.log("Invalid answer. Please try again.");
-      startAdminApp();
+      await startAdminApp();
   }
 }

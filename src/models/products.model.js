@@ -15,7 +15,7 @@ const productSchemma = {
   status: {
     type: String,
     required: true,
-    enum: ["Working product", "Defective product", "Sold product"],
+    enum: ["Working product", "Defective product"],
   },
 };
 

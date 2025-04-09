@@ -9,11 +9,19 @@ export default async function startShopping(unit) {
   console.log("Welcome to the store!");
   console.log("1. View products");
   console.log("2. Buy a product");
-  console.log("3. View/delete your active order");
-  console.log("4. Modify your order");
-  console.log("5. Logout");
+  console.log("3. Actions on your active order");
+  console.log("4. Logout");
 
   const answer = await rl.question("Please enter your answer: ");
+
+  while (answer !== "1" && answer !== "2" && answer !== "3" && answer !== "4") {
+    console.log("Invalid answer. Please try again.");
+    console.log("1. View products");
+    console.log("2. Buy a product");
+    console.log("3. Actions on your active order");
+    console.log("4. Logout");
+    answer = await rl.question("- ");
+  }
 
   switch (answer) {
     case "1":
@@ -26,9 +34,6 @@ export default async function startShopping(unit) {
       await getMyOrder(unit);
       break;
     case "4":
-      await modifyMyOrder(unit);
-      break;
-    case "5":
       await displayMainMenu();
       break;
     default:

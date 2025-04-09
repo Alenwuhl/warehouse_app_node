@@ -27,7 +27,17 @@ export default async function findProductsByCategory() {
     }
     const products = await productsController.findProductsByCategory(category);
     if (products) {
-      console.log(`Products with category ${category}: `, products);
+      console.log(`Products with category ${category}: `);
+      console.log("------------------------------");
+      products.forEach((product) => {
+        console.log(`ID: ${product._id}`);
+        console.log(`Name: ${product.title}`);
+        console.log(`Description: ${product.description}`);
+        console.log(`Category: ${product.category}`);
+        console.log(`Price: ${product.price}`);
+        console.log(`Stock: ${product.stock}`);
+        console.log("------------------------------");
+      });
       const enter = await rl.question("Press enter to return to the menu...");
       if (enter === "") {
         await startAdminApp();

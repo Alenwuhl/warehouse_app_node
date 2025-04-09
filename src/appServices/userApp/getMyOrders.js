@@ -1,33 +1,51 @@
 import rl from "../../config/readline.js";
 import startShopping from "./shoppingApp.js";
 import * as cartsController from "../../controllers/cart.controller.js";
-import * as productsController from "../../controllers/products.controller.js";
-import Product from "../../models/products.model.js";
+import modifyMyOrder from "./modifyMyOrder.js";
+import finishPurchase from "./finishPurchase.js";
+
 
 export default async function getMyOrder(unit) {
   try {
-    const { cartId } = await cartsController.getActiveCart(unit);
+    const cart = await cartsController.getActiveCart(unit);
     
-    const cart = await cartsController.getCartById(cartId);
     if (!cart) {
       console.log("No active order found.");
       console.log("Returning to the menu...");
       await startShopping(unit);
       return;
     }
-    const products = await productsController.getProductsbyIds(cart);
-    console.log(`Your order:`);
-    console.log(
-      `${products
-        .map((p) => `- ${p.title} - $${p.price}`)
-        .join("\n")}`
+    const products = cart.items.map((item) => {
+      return {
+        id: item.productId,
+        title: item.title,
+        price: item.price,
+        quantity: item.quantity,
+      };
+    }
     );
+    console.log(`Your order:`);
+    console.log( `------------------------------`);
+    console.log(`Order number: ${cart.orderNumber}`);
+    console.log(`Status: ${cart.status}`);
+    console.log("Items:");
+    products.forEach((item, index) => {
+      console.log(
+        `  ${index + 1}. ${item.title}: Product ID - ${item.id}, Quantity - ${
+          item.quantity
+        }`
+      );
+    });
+    console.log(`Total Price: $${cart.totalPrice}`);
+    console.log("------------------------------");
 
-    console.log("Do you want to eliminate your order?");
-    console.log("1. Yes");
+    console.log("What do you want to do?");
+    console.log("1. Eliminate order");
+    console.log("2. Modify order");
+    console.log("3. Finish purchase");
     console.log("2. No, return to the menu");
     const answer = await rl.question("- ");
-    while (answer !== "1" && answer !== "2") {
+    while (answer !== "1" && answer !== "2" && answer !== "3" && answer !== "4") {
       console.log("Invalid answer. Please try again.");
       answer = await rl.question("- ");
     }
@@ -35,7 +53,7 @@ export default async function getMyOrder(unit) {
       case "1":
         try {
           await cartsController.deleteCart(cart);
-          console.log("Products deleted successfully.");
+          console.log("Order deleted successfully.");
           console.log("Returning to the menu...");
           await startShopping(unit);
         }
@@ -44,6 +62,12 @@ export default async function getMyOrder(unit) {
         }
         break;
       case "2":
+        await modifyMyOrder(cart);
+        break;
+      case "3":
+        await finishPurchase(cart);
+        break;
+      case "4":
         console.log("Returning to the menu...");
         await startShopping(unit);
         break;

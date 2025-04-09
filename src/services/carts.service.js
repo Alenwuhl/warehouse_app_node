@@ -7,13 +7,10 @@ const productsService = new ProductService();
 export default class CartsService {
   async activeCart(unit) {
     try {
-      console.log("unit activeCart", unit);
       const cart = await Carts.findOne({ unitId: unit, status: "active" });
-      console.log("cart activeCart", cart);
       if (cart) {
         return cart
       } else {
-        console.log("No active cart found for this unit");
         return null;
       }
     } catch (error) {

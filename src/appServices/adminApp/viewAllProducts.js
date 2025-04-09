@@ -4,8 +4,16 @@ import rl from "../../config/readline.js"
 
 export default async function viewAllProducts() {
   try {
-    const availableProducts = await productsController.getAllProductsNamesAndIds();
-    console.log("Products: ", availableProducts.map((p, i) => `${i + 1} - ${p.title}`));
+    const availableProducts = await productsController.getProducts();
+    if (availableProducts.length === 0) {
+      console.log("No products available.");
+    } else {
+      console.log("Available products:");
+      availableProducts.forEach((product) => {
+        console.log(
+          `Title: ${product.title}, Description: ${product.description}, Price: $${product.price}`);
+      });
+    }
     
     const enter = await rl.question(
       "Press enter to return to the menu..."

@@ -94,8 +94,9 @@ export default async function displayMainMenu() {
             console.log("You can now manage products and units.");
             await startAdminApp();
           } else {
+            const unitBudget = await unitsController.returnUnitBudget(loginResponse.user.unit);
             console.log("You are logged in as a unit member.");
-            console.log( `Your unit budget is: ${unitsController.returnUnitBudget(loginResponse.user.unit )}`);
+            console.log( `Your unit budget is: $${unitBudget}`);
             console.log("You can now buy products from the store.");
             await startShopping(loginResponse.user.unit);
           };

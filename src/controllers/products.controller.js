@@ -59,6 +59,10 @@ export async function createProduct(
       expirationMonth - 1,
       expirationDay
     );
+    if (isNaN(expirationDate.getTime())) {
+      console.log("Invalid expiration date");
+      return null;
+    }
     const product = {
       title: title,
       description: description,
