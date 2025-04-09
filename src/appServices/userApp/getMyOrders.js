@@ -43,7 +43,7 @@ export default async function getMyOrder(unit) {
     console.log("1. Eliminate order");
     console.log("2. Modify order");
     console.log("3. Finish purchase");
-    console.log("2. No, return to the menu");
+    console.log("4. No, return to the menu");
     const answer = await rl.question("- ");
     while (answer !== "1" && answer !== "2" && answer !== "3" && answer !== "4") {
       console.log("Invalid answer. Please try again.");

@@ -53,9 +53,8 @@ export default async function finishPurchase(cart) {
           });
           1
           console.log("Please modify your order.");
-          console.log("unit", unit);
           
-          await modifyMyOrder(unit);
+          await modifyMyOrder(cart);
         }
       } catch (error) {
         console.log("Error: ", error.message);

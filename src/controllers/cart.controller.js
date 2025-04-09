@@ -76,19 +76,6 @@ export async function getOrderByProductId(productId) {
   }
 }
 
-export async function getOrderByProduct(productId) {
-  try {
-    const orders = await cartsService.getOrderByProductId(productId);
-    if (!orders) {
-      console.log("No orders found");
-    }
-    return orders;
-  } catch (error) {
-    console.error("Error fetching orders:", error);
-    throw error;
-  }
-}
-
 export async function updateCart(id, updateValue) {
   try {
     const updatedCart = await cartsService.updateCart(id, updateValue, {

@@ -17,7 +17,8 @@ export default class ProductService {
       const products = await Product.find({_id: { $in: itemIds}})
       return products
     } catch (error) {
-      
+      console.error("Error getting products:", error);
+      throw error;
     }
   }
 

@@ -62,7 +62,7 @@ export default async function buyAProduct(unit) {
       console.log("What do you want to do?");
       console.log("1. Finish my order");
       console.log("2. Modify my order");
-      console.log("3. Return to the menu");
+      console.log("4. Return to the menu");
 
       const answer = await rl.question("- ");
 
