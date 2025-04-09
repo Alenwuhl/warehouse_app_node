@@ -2,9 +2,10 @@ import * as productsController from "../../controllers/products.controller.js";
 import rl from "../../config/readline.js";
 import * as cartsController from "../../controllers/cart.controller.js";
 import startShopping from "./shoppingApp.js";
-import modifyMyOrder from "./ModifyMyOrder.js";
+import modifyMyOrder from "./modifyMyOrder.js";
 import finishPurchase from "./finishPurchase.js";
 import Product from "../../models/products.model.js";
+
 export default async function buyAProduct(unit) {
   try {
     const products = await productsController.getProducts();
@@ -33,14 +34,13 @@ export default async function buyAProduct(unit) {
     );
     const quantity = parseInt(quantityString);
 
-    const cartId = await cartsController.addProductToCart(
+    const cart = await cartsController.addProductToCart(
       chooseProduct.id,
       quantity,
       unit
     );
 
-    if (cartId) {
-      const cart = await cartsController.getCartById(cartId);
+    if (cart) {
       console.log(
         `You've added ${quantity} of ${chooseProduct.title} to your cart`
       );

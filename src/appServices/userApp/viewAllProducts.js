@@ -12,9 +12,13 @@ export default async function viewAllProducts(unit) {
         .map((product, index) => `${index + 1}. ${product.title}`)
         .join("\n")}
       `);
-    const enter = await rl.question("Press enter to return to the menu...");
+    let enter = await rl.question("Press enter to return to the menu...");
     if (enter === "") {
       await startShopping(unit);
+    }
+    while (enter !== "") {
+      console.log("Invalid input. Please press enter to return to the menu.");
+      enter = await rl.question("- ");
     }
   } catch (error) {
     console.log("Error: ", error.message);

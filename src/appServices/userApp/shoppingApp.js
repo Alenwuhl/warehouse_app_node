@@ -2,8 +2,7 @@ import rl from "../../config/readline.js";
 import viewAllProducts from "./viewAllProducts.js";
 import buyAProduct from "./buyAProduct.js";
 import getMyOrder from "./getMyOrders.js";
-import startApp from "../adminApp/adminApp.js";
-import modifyMyOrder from "./ModifyMyOrder.js";
+import modifyMyOrder from "./modifyMyOrder.js";
 import displayMainMenu from "../displayMenu.js";
 
 export default async function startShopping(unit) {

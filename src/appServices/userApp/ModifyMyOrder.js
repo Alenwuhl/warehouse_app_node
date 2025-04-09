@@ -3,11 +3,8 @@ import rl from "../../config/readline.js";
 import * as cartsController from "../../controllers/cart.controller.js";
 import startShopping from "./shoppingApp.js";
 
-export default async function modifyMyOrder(unit){
+export default async function modifyMyOrder(cart){
     try {
-        const {cartId} = await cartsController.getActiveCart(unit.id);
-        const cart = await cartsController.getCartById(cartId);
-
         console.log("This is your active order");
         console.log("------------------------------");
         console.log(`Order number: ${cart.orderNumber}`);
@@ -39,21 +36,20 @@ export default async function modifyMyOrder(unit){
                 );
                 await cartsController.deleteProductFromCart(productId, cart.id);
                 console.log("Product deleted from your order");
-                await startShopping(unit);
+                await startShopping(cart.unitId);
             } else {
                 console.log("Invalid choice. Please try again.");
             }
         } else if (answer === "2") {
             console.log("You have chosen not to modify your order.");
-            await startShopping(unit);
+            await startShopping(cart.unitId);
         } else {
             console.log("Invalid choice. Please try again.");
-        }
-
-
-        
+        }        
     } catch (error) {
         console.error(error)
+        console.log("Error modifying your order:", error.message);
+        console.log("Please try again.");
+        await startShopping(cart.unitId);
     }
-
 }

@@ -7,12 +7,14 @@ const productsService = new ProductService();
 export default class CartsService {
   async activeCart(unit) {
     try {
+      console.log("unit activeCart", unit);
       const cart = await Carts.findOne({ unitId: unit, status: "active" });
+      console.log("cart activeCart", cart);
       if (cart) {
-        const cartId = cart.id;
-        return { cartId, unit };
+        return cart
       } else {
-        return false;
+        console.log("No active cart found for this unit");
+        return null;
       }
     } catch (error) {
       console.log("There is no active cart in your unit");
@@ -67,8 +69,7 @@ export default class CartsService {
 
   async addProductToCart(productId, quantity, unit) {
     try {
-      const { cartId } = await this.activeCart(unit);
-      let cart = await Carts.findById(cartId);
+      let cart = await this.activeCart(unit);
       if (!cart) {
         const orderNnumber = Math.floor(Math.random() * 1000000);
         cart = await this.createCart({
@@ -79,7 +80,7 @@ export default class CartsService {
           status: "active",
         });
       }
-      if (cart.items && cart.items.length > 0) {
+      if (cart.items.length > 0) {
         const index = cart.items.findIndex(
           (item) => item.productId === productId
         );
@@ -95,9 +96,9 @@ export default class CartsService {
         cart.items = [{ productId: productId, quantity: quantity }];
       }
       const product = await productsService.getProductById(productId);
-      cart.totalPrice += ( product.price * quantity );
+      cart.totalPrice += product.price * quantity;
       await cart.save();
-      return cart.id;
+      return cart;
     } catch (error) {
       console.log("The product could not be added to your cart");
       console.log(error);
