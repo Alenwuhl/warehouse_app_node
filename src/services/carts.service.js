@@ -113,25 +113,6 @@ export default class CartsService {
     }
   }
 
-  async getCartById(id) {
-    try {
-      return await Carts.findById(id);
-    } catch (error) {
-      console.error(error);
-      return { error: "Error fetching cart by ID" };
-    }
-  }
-
-  getCartByUserId = async (userId) => {
-    try {
-      const cart = await Carts.findOne({ user: userId });
-      return cart;
-    } catch (error) {
-      console.error(error);
-      return { error: "Error fetching cart by user ID" };
-    }
-  };
-
   async getOrderByNumber(orderNumber) {
     try {
       const order = await Carts.findOne({ orderNumber });
@@ -164,6 +145,7 @@ export default class CartsService {
       return { error: "Error updating cart" };
     }
   }
+
   async deleteProductFromCart(productId, cartId) {
     try {
       const cart = await Carts.findById(cartId);
@@ -185,33 +167,13 @@ export default class CartsService {
     }
   }
 
-  deleteCart = async (id) => {
+  async deleteCart (id){
     try {
       const deletedCart = await Carts.findByIdAndDelete(id);
       return deletedCart;
     } catch (error) {
       console.error(error);
       return { error: "Error deleting cart" };
-    }
-  };
-
-  getCartByStatus = async (status) => {
-    try {
-      const carts = await Carts.find({ status });
-      return carts;
-    } catch (error) {
-      console.error(error);
-      return { error: "Error fetching carts by status" };
-    }
-  };
-
-  getCartByProductId = async (productId) => {
-    try {
-      const carts = await Carts.find({ product: productId });
-      return carts;
-    } catch (error) {
-      console.error(error);
-      return { error: "Error fetching carts by product id" };
     }
   };
 }

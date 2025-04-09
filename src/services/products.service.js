@@ -1,5 +1,4 @@
 import Product from "../models/products.model.js";
-import Unit from "../models/units.model.js"
 
 export default class ProductService {
   async getProducts() {
@@ -108,7 +107,7 @@ export default class ProductService {
     }
   }
 
-  updateProduct = async (id, updateAttribute, newValue) => {
+  async updateProduct (id, updateAttribute, newValue) {
     try {
       const productToUpdate = await Product.findById(id);
       if (!productToUpdate) {
@@ -147,35 +146,5 @@ export default class ProductService {
       console.error("Error deleting product:", error);
       throw error;
     }
-  }
-  
-  async verifyThePurchase(id, quantity, unitId) {
-    const product = await Product.findById(id);
-    const productId = product.id
-    if (!product) {
-      throw new Error("Product not found");
-    }
-    if (product.stock < quantity) {
-      console.log(
-        "You will not be able to buy this product, the stock is: ",
-        product.stock
-      );
-      console.log("Try to buy a lower quantity");
-      throw new Error("Not enough stock");
-    }
-    if (product.expirationDate < new Date()) {
-      console.log("You will not be able to buy this product!");
-      throw new Error("The product has expired");
-    }
-    if (product.status === "Defective product") {
-      console.log("You will not be able to buy this product!");
-      throw new Error("Product is defective");
-    }
-    if (product.status === "Sold product") {
-      console.log("You will not be able to buy this product!");
-      throw new Error("Product is sold");
-    }
-    
-    return productId, quantity, unitId;
   }
 }

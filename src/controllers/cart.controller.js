@@ -37,18 +37,6 @@ export async function getAllOrdersNumbers() {
   }
 }
 
-export async function getCartById(id) {
-  try {
-    const cart = await cartsService.getCartById(id);
-    if (!cart) {
-      console.log("Cart not found");
-    }
-    return cart;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export async function getOrderByNumber(orderNumber) {
   try {
     const order = await cartsService.getOrderByNumber(orderNumber);
