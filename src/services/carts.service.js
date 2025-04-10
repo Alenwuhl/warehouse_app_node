@@ -93,7 +93,9 @@ export default class CartsService {
         cart.items = [{ productId: productId, quantity: quantity }];
       }
       const product = await productsService.getProductById(productId);
-      cart.totalPrice += product.price * quantity;
+      console.log("product", product);
+      
+      cart.totalPrice = cart.totalPrice + product.price * quantity;
       await cart.save();
       return cart;
     } catch (error) {

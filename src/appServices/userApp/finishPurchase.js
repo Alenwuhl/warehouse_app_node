@@ -27,7 +27,9 @@ export default async function finishPurchase(cart) {
         
         if (products.length === cart.items.length) {
           cart.status = "completed";
+          unit.budget = unit.budget - cart.totalPrice
           await cartsController.updateCart(cart._id, cart);
+          await unitController.updateUnitBudget(unit.id, unit.budget)
           console.log("Your order has been completed!");
           //updeteo stock
           products.map((product) => {
@@ -39,6 +41,7 @@ export default async function finishPurchase(cart) {
               product.save();
             }
           });
+          await startShopping(unit)
         } else {
           let unavailableProducts = cart.items.filter((i) => {
             return !products.some((product) => product._id.equals(i.productId));
@@ -53,7 +56,6 @@ export default async function finishPurchase(cart) {
           });
           1
           console.log("Please modify your order.");
-          
           await modifyMyOrder(cart);
         }
       } catch (error) {
