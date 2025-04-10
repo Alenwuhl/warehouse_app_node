@@ -16,29 +16,30 @@ import deleteUnit from "./deleteUnit.js";
 import rl from "../../config/readline.js";
 import displayMainMenu from "../displayMenu.js";
 import getOrderbyNumber from "./getOrderbyNumber.js";
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function startAdminApp() {
-  console.log("Welcome to the admin app!");
-  console.log("1. View all products");
-  console.log("2. Create a new product");
-  console.log("3. Update a product");
-  console.log("4. Delete a product");
-  console.log("5. View all units");
-  console.log("6. Create a new unit");
-  console.log("7. Update budget for an unit");
-  console.log("8. Delete a unit");
-  console.log("9. Find orders by order number");
-  console.log("10. Find orders by status");
-  console.log("11. Find orders by product");
-  console.log("12. Find products by category");
-  console.log("13. Find products by defective product");
-  console.log("14. Find products by expiration date");
-  console.log("15. Logout");
+  logger.http("Welcome to the admin app!");
+  logger.info("1. View all products");
+  logger.info("2. Create a new product");
+  logger.info("3. Update a product");
+  logger.info("4. Delete a product");
+  logger.info("5. View all units");
+  logger.info("6. Create a new unit");
+  logger.info("7. Update budget for an unit");
+  logger.info("8. Delete a unit");
+  logger.info("9. Find orders by order number");
+  logger.info("10. Find orders by status");
+  logger.info("11. Find orders by product");
+  logger.info("12. Find products by category");
+  logger.info("13. Find products by defective product");
+  logger.info("14. Find products by expiration date");
+  logger.info("15. Logout");
 
   let answer = await rl.question("Please enter your answer: ");
 
   while (isNaN(answer) || answer < 1 || answer > 15) {
-    console.log("Invalid answer. Please enter a number between 1 and 15.");
+    logger.fatal("Invalid answer. Please enter a number between 1 and 15.");
     answer = await rl.question("Please enter your answer: ");
   }
 

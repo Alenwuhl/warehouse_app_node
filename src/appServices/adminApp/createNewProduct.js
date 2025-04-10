@@ -1,6 +1,7 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js"
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function createNewProduct() {
   const productName = await rl.question("Please enter the product name: ");
@@ -8,17 +9,17 @@ export default async function createNewProduct() {
     "Please enter the product description: "
   );
   console.log("Please enter the number of the product category, you can choose between:");
-  console.log("1. weapons");
-  console.log("2. clothing");
-  console.log("3. electronics");
-  console.log("4. other");
+  logger.info("1. weapons");
+  logger.info("2. clothing");
+  logger.info("3. electronics");
+  logger.info("4. other");
   let productCategory = await rl.question("- ");
   while (productCategory !== "1" && productCategory !== "2" && productCategory !== "3" && productCategory !== "4") {
     console.log("Please enter a valid category number (1-4):");
-    console.log("1. weapons");
-    console.log("2. clothing");
-    console.log("3. electronics");
-    console.log("4. other");
+    logger.info("1. weapons");
+    logger.info("2. clothing");
+    logger.info("3. electronics");
+    logger.info("4. other");
     productCategory = await rl.question("- ");
   }
   switch (productCategory) {
@@ -60,10 +61,10 @@ export default async function createNewProduct() {
     productExpirationDay
   );
   if (newProduct) {
-    console.log(`Product ${productName} created successfully.`);
+    logger.http(`Product ${productName} created successfully.`);
     await startAdminApp();
   } else {
-    console.log(`Product ${productName} not created, try again.`);
+    logger.fatal(`Product ${productName} not created, try again.`);
     await startAdminApp();
   }
 }

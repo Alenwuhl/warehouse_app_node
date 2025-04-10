@@ -1,5 +1,6 @@
 import * as productsController from "../../controllers/products.controller.js";
 import rl from "../../config/readline.js";
+import { logger } from "../../config/loggerCustom.js"
 import startShopping from "./shoppingApp.js";
 
 export default async function viewAllProducts(unit) {
@@ -7,7 +8,7 @@ export default async function viewAllProducts(unit) {
     const availableProducts =
       await productsController.getAllProductsNamesAndIds();
     console.log(`Products:`);
-    console.log(`
+    logger.info(`
       ${availableProducts
         .map((product, index) => `${index + 1}. ${product.title}`)
         .join("\n")}
@@ -17,7 +18,7 @@ export default async function viewAllProducts(unit) {
       await startShopping(unit);
     }
     while (enter !== "") {
-      console.log("Invalid input. Please press enter to return to the menu.");
+      logger.fatal("Invalid input. Please press enter to return to the menu.");
       enter = await rl.question("- ");
     }
   } catch (error) {

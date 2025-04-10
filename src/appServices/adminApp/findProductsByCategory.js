@@ -1,14 +1,15 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js"
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function findProductsByCategory() {
   try {
     console.log("Choose a category: ");
-    console.log("1. weapons");
-    console.log("2. clothing");
-    console.log("3. electronics");
-    console.log("4. other");
+    logger.info("1. weapons");
+    logger.info("2. clothing");
+    logger.info("3. electronics");
+    logger.info("4. other");
     let category = await rl.question("- ");
     switch (category) {
       case "1":
@@ -27,15 +28,15 @@ export default async function findProductsByCategory() {
     }
     const products = await productsController.findProductsByCategory(category);
     if (products) {
-      console.log(`Products with category ${category}: `);
+      logger.info(`Products with category ${category}: `);
       console.log("------------------------------");
       products.forEach((product) => {
-        console.log(`ID: ${product._id}`);
-        console.log(`Name: ${product.title}`);
-        console.log(`Description: ${product.description}`);
-        console.log(`Category: ${product.category}`);
-        console.log(`Price: ${product.price}`);
-        console.log(`Stock: ${product.stock}`);
+        logger.info(`ID: ${product._id}`);
+        logger.info(`Name: ${product.title}`);
+        logger.info(`Description: ${product.description}`);
+        logger.info(`Category: ${product.category}`);
+        logger.info(`Price: ${product.price}`);
+        logger.info(`Stock: ${product.stock}`);
         console.log("------------------------------");
       });
       const enter = await rl.question("Press enter to return to the menu...");
@@ -43,8 +44,11 @@ export default async function findProductsByCategory() {
         await startAdminApp();
       }
     } else {
-      console.log("No products found with this category");
-      const enter = await rl.question("Press enter to return to the menu...");
+      logger.fatal("No products found with this category");
+      let enter = await rl.question("Press enter to return to the menu...");
+      while (enter !== "") {
+        enter = await rl.question("Press enter to return to the menu...");
+      }
       if (enter === "") {
         await startAdminApp();
       }

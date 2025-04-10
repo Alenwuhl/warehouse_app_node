@@ -1,13 +1,14 @@
 import * as cartsController from "../../controllers/cart.controller.js";
 import rl from "../../config/readline.js";
 import startAdminApp from "./adminApp.js"
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function viewAllOrders() {
   try {
     console.log("Please enter the status of the orders you want to see:");
-    console.log("1. Active");
-    console.log("2. Completed");
-    console.log("3. Return to the menu");
+    logger.info("1. Active");
+    logger.info("2. Completed");
+    logger.info("3. Return to the menu");
     let status = await rl.question("- ");
 
     switch (status) {
@@ -21,21 +22,21 @@ export default async function viewAllOrders() {
         await startAdminApp();
         return;
       default:
-        console.log("Invalid option. Please try again.");
+        logger.fatal("Invalid option. Please try again.");
         await viewAllOrders();
         return;
     }
 
     const orders = await cartsController.getOrdersByStatus(status);
     if (!orders || orders.length === 0) {
-      console.log("No orders found for the selected status.");
+      logger.fatal("No orders found for the selected status.");
       const enter = await rl.question("Press enter to return to the menu...");
       if (enter === "") {
         await startAdminApp();
       }
     }
     console.log("Orders: ");
-    console.log(
+    logger.info(
       orders
         .map((order) => {
           return `
@@ -47,7 +48,10 @@ export default async function viewAllOrders() {
         })
         .join("\n")
     );
-    const enter = await rl.question("Press enter to return to the menu...");
+    let enter = await rl.question("Press enter to return to the menu...");
+    while (enter !== "") {
+      enter = await rl.question("Press enter to return to the menu...");
+    }
     if (enter === "") {
       await startAdminApp();
     }

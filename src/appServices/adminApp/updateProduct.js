@@ -1,40 +1,40 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js";
-import e from "express";
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function updateProduct() {
   const products = await productsController.getProducts();
-  console.log(`Please enter the product name to update: 
+  logger.info(`Please enter the product name to update: 
   ${products.map((p, i) => `${i + 1}. ${p.title}`).join("\n")}`);
   let chooseProduct = await rl.question("- ");
   while (chooseProduct < 1 || chooseProduct > products.length) {
-    console.log("Invalid choice. Please enter a valid number");
-    console.log(`Please enter the product name to update: 
+    logger.fatal("Invalid choice. Please enter a valid number");
+    logger.info(`Please enter the product name to update: 
       ${products.map((p, i) => `${i + 1}. ${p.title}`).join("\n")}`);
   }
   chooseProduct = products[chooseProduct - 1];
 
   if (chooseProduct) {
-    console.log("This is the product: ");
+    logger.info("This is the product: ");
     console.log("----------------------------------------");
-    console.log(`Title: ${chooseProduct.title}`);
-    console.log(`Description: ${chooseProduct.description}`);
-    console.log(`Price: ${chooseProduct.price}`);
-    console.log(`Category: ${chooseProduct.category}`);
-    console.log(`Stock: ${chooseProduct.stock}`);
-    console.log(`Expiration date: ${chooseProduct.expirationDate}`);
-    console.log(`Status: ${chooseProduct.status}`);
+    logger.info(`Title: ${chooseProduct.title}`);
+    logger.info(`Description: ${chooseProduct.description}`);
+    logger.info(`Price: ${chooseProduct.price}`);
+    logger.info(`Category: ${chooseProduct.category}`);
+    logger.info(`Stock: ${chooseProduct.stock}`);
+    logger.info(`Expiration date: ${chooseProduct.expirationDate}`);
+    logger.info(`Status: ${chooseProduct.status}`);
     console.log("----------------------------------------");
 
     console.log("Please enter which think you want to update: ");
-    console.log("1. title");
-    console.log("2. description");
-    console.log("3. price");
-    console.log("4. category");
-    console.log("5. stock");
-    console.log("6. expiration date");
-    console.log("7. status");
+    logger.info("1. title");
+    logger.info("2. description");
+    logger.info("3. price");
+    logger.info("4. category");
+    logger.info("5. stock");
+    logger.info("6. expiration date");
+    logger.info("7. status");
 
     let updateAttribute = await rl.question("- ");
 
@@ -43,7 +43,7 @@ export default async function updateProduct() {
       updateAttribute > 7 ||
       isNaN(updateAttribute)
     ) {
-      console.log("Invalid choice. Please enter a valid number");
+      logger.fatal("Invalid choice. Please enter a valid number");
       updateAttribute = await rl.question("- ");
     }
 
@@ -72,18 +72,18 @@ export default async function updateProduct() {
       default:
     }
     if (updateAttribute === "expirationDate") {
-      console.log("Please enter the new expiration year:");
+      logger.info("Please enter the new expiration year:");
       let expirationYear = await rl.question("- ");
-      console.log("Please enter the new expiration month:");
+      logger.info("Please enter the new expiration month:");
       let expirationMonth = await rl.question("- ");
-      console.log("Please enter the new expiration day:");
+      logger.info("Please enter the new expiration day:");
       let expirationDay = await rl.question("- ");
       if (
         isNaN(expirationYear) ||
         isNaN(expirationMonth) ||
         isNaN(expirationDay)
       ) {
-        console.log("Invalid date. Please enter a valid date.");
+        logger.fatal("Invalid date. Please enter a valid date.");
         await updateProduct();
       }
       expirationYear = parseInt(expirationYear);
@@ -95,7 +95,7 @@ export default async function updateProduct() {
         expirationDay
       );
       if (isNaN(expirationDate.getTime())) {
-        console.log("Invalid date. Please enter a valid date.");
+        logger.fatal("Invalid date. Please enter a valid date.");
         await updateProduct();
       }      
       const updatedProduct = await productsController.updateProduct(
@@ -104,20 +104,20 @@ export default async function updateProduct() {
         expirationDate
       );
       if (updatedProduct) {
-        console.log(`Product ${chooseProduct} has been updated successfully.`);
+        logger.http(`Product ${chooseProduct} has been updated successfully.`);
         await startAdminApp();
       } else {
-        console.log(`Failed to update product ${chooseProduct}.`);
+        logger.fatal(`Failed to update product ${chooseProduct}.`);
         await updateProduct();
       }
     } else if (updateAttribute === "category") {
       console.log(
         "Please enter the number of the product category, you can choose between:"
       );
-      console.log("1. weapons");
-      console.log("2. clothing");
-      console.log("3. electronics");
-      console.log("4. other");
+      logger.info("1. weapons");
+      logger.info("2. clothing");
+      logger.info("3. electronics");
+      logger.info("4. other");
       let productCategory = await rl.question("- ");
       while (
         productCategory !== "1" &&
@@ -126,10 +126,10 @@ export default async function updateProduct() {
         productCategory !== "4"
       ) {
         console.log("Please enter a valid category number (1-4):");
-        console.log("1. weapons");
-        console.log("2. clothing");
-        console.log("3. electronics");
-        console.log("4. other");
+        logger.info("1. weapons");
+        logger.info("2. clothing");
+        logger.info("3. electronics");
+        logger.info("4. other");
         productCategory = await rl.question("- ");
       }
       switch (productCategory) {
@@ -153,25 +153,25 @@ export default async function updateProduct() {
         productCategory
       );
       if (updatedProduct) {
-        console.log(`Product ${chooseProduct} has been updated successfully.`);
+        logger.http(`Product ${chooseProduct} has been updated successfully.`);
       } else {
-        console.log(`Failed to update product ${chooseProduct}.`);
+        logger.info(`Failed to update product ${chooseProduct}.`);
         await startAdminApp();
       }
     } else if (updateAttribute === "status") {
       if (chooseProduct.status === "Defective product") {
-        console.log("You cannot update the status of a defective product.");
-        console.log("Try creating a new product instead.");
+        logger.fatal("You cannot update the status of a defective product.");
+        logger.info("Try creating a new product instead.");
         await startAdminApp();
       } else {
         console.log('Do you want to change the status to "Defective product"?');
-        console.log("1. Yes");
-        console.log("2. No");
+        logger.info("1. Yes");
+        logger.info("2. No");
         let changeStatus = await rl.question("- ");
         while (changeStatus !== "1" && changeStatus !== "2") {
-          console.log("Please enter a valid option (1-2):");
-          console.log("1. Yes");
-          console.log("2. No");
+          logger.fatal("Please enter a valid option (1-2):");
+          logger.info("1. Yes");
+          logger.info("2. No");
           changeStatus = await rl.question("- ");
         }
         switch (changeStatus) {
@@ -179,7 +179,7 @@ export default async function updateProduct() {
             changeStatus = "Defective product";
             break;
           case "2":
-            console.log("Status not changed");
+            logger.fatal("Status not changed");
             await updateProduct();
             break;
           default:
@@ -190,12 +190,12 @@ export default async function updateProduct() {
           changeStatus
         );
         if (updatedProduct) {
-          console.log(
+          logger.http(
             `Product ${chooseProduct.title} has been updated successfully.`
           );
           await startAdminApp();
         } else {
-          console.log(`Failed to update product ${chooseProduct}.`);
+          logger.fatal(`Failed to update product ${chooseProduct}.`);
           await updateProduct();
         }
       }
@@ -207,20 +207,20 @@ export default async function updateProduct() {
         newValue
       );
       if (updatedProduct) {
-        console.log(`The product has been updated successfully.`);
+        logger.http(`The product has been updated successfully.`);
         console.log("The new product is: ");
         console.log("----------------------------------------");
-        console.log(`Title: ${updatedProduct.title}`);
-        console.log(`Description: ${updatedProduct.description}`);
-        console.log(`Price: ${updatedProduct.price}`);
-        console.log(`Category: ${updatedProduct.category}`);
-        console.log(`Stock: ${updatedProduct.stock}`);
-        console.log(`Expiration date: ${updatedProduct.expirationDate}`);
-        console.log(`Status: ${updatedProduct.status}`);
+        logger.info(`Title: ${updatedProduct.title}`);
+        logger.info(`Description: ${updatedProduct.description}`);
+        logger.info(`Price: ${updatedProduct.price}`);
+        logger.info(`Category: ${updatedProduct.category}`);
+        logger.info(`Stock: ${updatedProduct.stock}`);
+        logger.info(`Expiration date: ${updatedProduct.expirationDate}`);
+        logger.info(`Status: ${updatedProduct.status}`);
         console.log("----------------------------------------");
         await startAdminApp();
       } else {
-        console.log(`Failed to update product ${chooseProduct}.`);
+        logger.fatal(`Failed to update product ${chooseProduct}.`);
         await updateProduct();
       }
     }

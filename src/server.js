@@ -1,14 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import "./config/mongo.config.js";
-
-// import * as userController from "./controllers/users.controller.js";
-// import * as unitsController from "./controllers/units.controller.js";
-// import * as productsController from "./controllers/products.controller.js";
-import startAdminApp from "./appServices/adminApp/adminApp.js";
 import displayMainMenu from "./appServices/displayMenu.js";
-import startShopping from "./appServices/userApp/shoppingApp.js";
-// import startShopping from "./shoppingApp.js";
+import { logger } from "./config/loggerCustom.js"
 import rl from "./config/readline.js";
 
 dotenv.config();
@@ -23,14 +17,14 @@ app.listen(port);
 startServer();
 
 async function startServer() {
-  console.log("Do you know the rules?");
-  console.log("1. Yes, I know the rules.");
-  console.log("2. No, I don't know the rules.");
+  logger.info("Do you know the rules?");
+  logger.http("1. Yes, I know the rules.");
+  logger.fatal("2. No, I don't know the rules.");
 
   const answer = await rl.question("Please enter your answer: ");
 
   if (answer === "1") {
-    console.log("Great! Let's start.");
+    logger.http("Great! Let's start.");
     await displayMainMenu();
     rl.close();
   } else if (answer === "2") {
@@ -55,12 +49,12 @@ async function startServer() {
       "- You can find products by category, by defective product or by expiration date."
     );
 
-    console.log("This is the end of the rules, do you want to continue?");
-    console.log("1. Yes, I want to continue.");
-    console.log("2. No, I don't want to continue.");
+    logger.info("This is the end of the rules, do you want to continue?");
+    logger.http("1. Yes, I want to continue.");
+    logger.fatal("2. No, I don't want to continue.");
     const continueAnswer = await rl.question("Please enter your answer: ");
     if (continueAnswer === "1") {
-      console.log("Great! Let's start.");
+      logger.http("Great! Let's start.");
       await displayMainMenu();
     } else if (continueAnswer === "2") {
       return;
