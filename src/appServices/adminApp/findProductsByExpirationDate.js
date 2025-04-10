@@ -1,10 +1,11 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js";
+import { logger } from "../../config/loggerCustom.js";
 
 export default async function findProductsByExpirationDate() {
   try {
-    console.log(
+    logger.info(
       "Enter a date and you will get all products that will be expired on that date"
     );
     const year = await rl.question("Enter a year: ");
@@ -19,18 +20,18 @@ export default async function findProductsByExpirationDate() {
       console.log("Al this products will be expired on this date");
       console.log("------------------------------");
       products.forEach((product) => {
-        console.log(`ID: ${product._id}`);
-        console.log(`Name: ${product.title}`);
-        console.log(`Description: ${product.description}`);
-        console.log(`Category: ${product.category}`);
-        console.log(`Price: ${product.price}`);
-        console.log(`Stock: ${product.stock}`);
-        console.log(`Expiration date: ${product.expirationDate}`);
+        logger.info(`ID: ${product._id}`);
+        logger.info(`Name: ${product.title}`);
+        logger.info(`Description: ${product.description}`);
+        logger.info(`Category: ${product.category}`);
+        logger.info(`Price: ${product.price}`);
+        logger.info(`Stock: ${product.stock}`);
+        logger.info(`Expiration date: ${product.expirationDate}`);
         console.log("------------------------------");
       });
-      const enter = await rl.question("Press enter to return to the menu...");
-      if (enter === "") {
-        await startAdminApp();
+      let enter = await rl.question("Press enter to return to the menu...");
+      while (enter !== "") {
+        enter = await rl.question("Press enter to return to the menu...");
       }
     }
   } catch (error) {

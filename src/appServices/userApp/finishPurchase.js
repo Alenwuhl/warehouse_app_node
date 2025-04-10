@@ -1,17 +1,18 @@
-import * as productsController from "../../controllers/products.controller.js";
-import rl from "../../config/readline.js";
 import * as cartsController from "../../controllers/cart.controller.js";
 import * as unitController from "../../controllers/units.controller.js";
+import * as productsController from "../../controllers/products.controller.js"
 import Product from "../../models/products.model.js";
 import modifyMyOrder from "./modifyMyOrder.js";
 import startShopping from "./shoppingApp.js";
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function finishPurchase(cart) {
       try {
         const unit = await unitController.getUnitById(cart.unitId);
+        
         if (unit.budget <= cart.totalPrice) {
-          console.log("You don't have enough budget to complete this order.");
-          console.log("You will need to modify your order.");
+          logger.fatal("You don't have enough budget to complete this order.");
+          logger.fatal("You will need to modify your order.");
           await modifyMyOrder(cart);
           return;
         }
@@ -30,7 +31,7 @@ export default async function finishPurchase(cart) {
           unit.budget = unit.budget - cart.totalPrice
           await cartsController.updateCart(cart._id, cart);
           await unitController.updateUnitBudget(unit.id, unit.budget)
-          console.log("Your order has been completed!");
+          logger.http("Your order has been completed!");
           //updeteo stock
           products.map((product) => {
             const cartItem = cart.items.find((i) =>
@@ -41,20 +42,20 @@ export default async function finishPurchase(cart) {
               product.save();
             }
           });
-          await startShopping(unit)
+          await startShopping(unit.id)
         } else {
-          let unavailableProducts = cart.items.filter((i) => {
+          let unavailableProductsIds = cart.items.filter((i) => {
             return !products.some((product) => product._id.equals(i.productId));
           });
+          let unavailableProducts = await productsController.getProductsbyIds(unavailableProductsIds)
           console.log("The following products are not available:");
           unavailableProducts.forEach((item, index) => {
-            console.log(
+            logger.fatal(
               `  ${index + 1}. Product ID: ${item.productId} - Quantity: ${
                 item.quantity
               }`
             );
           });
-          1
           console.log("Please modify your order.");
           await modifyMyOrder(cart);
         }

@@ -3,16 +3,17 @@ import * as productsController from "../../controllers/products.controller.js";
 import * as cartController from "../../controllers/cart.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js";
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function getOrderByProduct() {
   try {
     const products = await productsController.getAllProductsNamesAndIds();
     if (!products) {
-      console.log("No products found");
+      logger.fatal("No products found");
       return;
     }
     console.log("Products: ");
-    console.log(
+    logger.info(
       products
         .map((product, i) => {
           return `
@@ -24,8 +25,8 @@ export default async function getOrderByProduct() {
     console.log("Please enter the product: ");
     let productId = await rl.question("- ");
     while (productId < 1 || productId > products.length) {
-      console.log("Invalid choice. Please enter a valid number");
-      console.log(`This is the list of products: 
+      logger.fatal("Invalid choice. Please enter a valid number");
+      logger.info(`This is the list of products: 
                 ${products.map((p, i) => `${i + 1}. ${p.title}`).join("\n")}`);
       productId = await rl.question("- ");
     }
@@ -33,10 +34,10 @@ export default async function getOrderByProduct() {
 
     const orders = await cartController.getOrderByProductId(productId);
     if (!orders) {
-      console.log("No orders found");
+      logger.fatal("No orders found");
     }
     console.log("Orders: ");
-    console.log(
+    logger.info(
       orders
         .map((order) => {
           return `

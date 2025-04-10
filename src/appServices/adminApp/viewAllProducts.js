@@ -1,16 +1,17 @@
 import * as productsController from "../../controllers/products.controller.js";
 import startAdminApp from "./adminApp.js";
 import rl from "../../config/readline.js"
+import { logger } from "../../config/loggerCustom.js"
 
 export default async function viewAllProducts() {
   try {
     const availableProducts = await productsController.getProducts();
     if (availableProducts.length === 0) {
-      console.log("No products available.");
+      logger.fatal("No products available.");
     } else {
       console.log("Available products:");
       availableProducts.forEach((product) => {
-        console.log(
+        logger.info(
           `Title: ${product.title}, Description: ${product.description}, Price: $${product.price}`);
       });
     }
@@ -22,6 +23,6 @@ export default async function viewAllProducts() {
       await startAdminApp();
     }
   } catch (error) {
-    console.log("Error: ", error.message);
+    logger.fatal("Error: ", error.message);
   }
 }
