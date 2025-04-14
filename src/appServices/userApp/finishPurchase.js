@@ -23,7 +23,7 @@ export default async function finishPurchase(cart) {
             status: "Working product", 
           };
         });
-        
+        // i need to move this
         const products = await Product.find({ $or: conditions });
         
         if (products.length === cart.items.length) {

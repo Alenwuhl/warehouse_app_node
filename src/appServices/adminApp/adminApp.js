@@ -20,6 +20,7 @@ import { logger } from "../../config/loggerCustom.js"
 
 export default async function startAdminApp() {
   logger.http("Welcome to the admin app!");
+  console.log("---------------------------------")
   logger.info("1. View all products");
   logger.info("2. Create a new product");
   logger.info("3. Update a product");
@@ -35,6 +36,8 @@ export default async function startAdminApp() {
   logger.info("13. Find products by defective product");
   logger.info("14. Find products by expiration date");
   logger.info("15. Logout");
+  console.log("---------------------------------")
+
 
   let answer = await rl.question("Please enter your answer: ");
 

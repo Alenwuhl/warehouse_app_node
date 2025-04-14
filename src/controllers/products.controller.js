@@ -1,8 +1,6 @@
 import ProductService from "../services/products.service.js";
-import CartService from "../services/carts.service.js"
 
 const productsService = new ProductService();
-const cartService = new CartService();
 
 export async function getProducts() {
   try {

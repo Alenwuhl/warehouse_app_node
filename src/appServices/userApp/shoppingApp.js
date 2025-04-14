@@ -7,12 +7,14 @@ import displayMainMenu from "../displayMenu.js";
 
 export default async function startShopping(unit) {
   logger.http("Welcome to the store!");
+  console.log("---------------------------------")
   logger.info("1. View products");
   logger.info("2. Buy a product");
   logger.info("3. Actions on your active order");
   logger.info("4. Logout");
+  console.log("---------------------------------")
 
-  const answer = await rl.question("Please enter your answer: ");
+  let answer = await rl.question("Please enter your answer: ");
 
   while (answer !== "1" && answer !== "2" && answer !== "3" && answer !== "4") {
     logger.fatal("Invalid answer. Please try again.");

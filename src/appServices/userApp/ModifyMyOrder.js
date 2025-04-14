@@ -3,7 +3,7 @@ import rl from "../../config/readline.js";
 import * as cartsController from "../../controllers/cart.controller.js";
 import startShopping from "./shoppingApp.js";
 import buyAProduct from "./buyAProduct.js";
-import { logger } from "../../config/loggerCustom.js"
+import { logger } from "../../config/loggerCustom.js";
 
 export default async function modifyMyOrder(cart) {
   try {
@@ -34,7 +34,13 @@ export default async function modifyMyOrder(cart) {
       console.log("What do you want to do?");
       logger.info("1. Add a product");
       logger.info("2. Delete a product");
-      const answer2 = await rl.question("- ");
+      let answer2 = await rl.question("- ");
+
+      while (answer2 !== "1" && answer2 !== "2") {
+        console.log("Invalid answer. Please try again.");
+        answer2 = await rl.question("- ");
+      }
+
       if (answer2 === "1") {
         await buyAProduct(cart.unitId);
       } else if (answer2 === "2") {
@@ -59,17 +65,19 @@ export default async function modifyMyOrder(cart) {
               })
               .join("\n")
           );
-          productId = await rl.question("Please enter the product you want to delete: ");
+          productId = await rl.question(
+            "Please enter the product you want to delete: "
+          );
         }
         productId = cart.items[productId - 1].productId;
 
         await cartsController.deleteProductFromCart(productId, cart.id);
-        const product = await productsController.getProductById(productId)
+        const product = await productsController.getProductById(productId);
         logger.http("Product deleted from your order");
-        const totalPrice = cart.totalPrice - product.price
-        await cartsController.updateCart(cart.id, {totalPrice: totalPrice} )
+        const totalPrice = cart.totalPrice - product.price;
+        await cartsController.updateCart(cart.id, { totalPrice: totalPrice });
         if (cart.items.length <= 1) {
-          await cartsController.deleteCart(cart.id)
+          await cartsController.deleteCart(cart.id);
         }
         await startShopping(cart.unitId);
       } else {
@@ -80,7 +88,6 @@ export default async function modifyMyOrder(cart) {
       await startShopping(cart.unitId);
     } else {
       logger.fatal("Invalid choice. Please try again.");
-      
     }
   } catch (error) {
     console.error(error);

@@ -11,7 +11,15 @@ export default async function displayMainMenu() {
   logger.info("2. Register as a unit member");
   logger.info("3. Login with your account");
 
-  const answer = await rl.question("Please enter your answer: ");
+  let answer = await rl.question("Please enter your answer: ");
+  while (answer !== "1" && answer !== "2" && answer !== "3") {
+    logger.fatal("That is not an option!")
+    logger.fatal("Your options are 1, 2 or 3!")
+    logger.info("1. Register as an admin");
+    logger.info("2. Register as a unit member");
+    logger.info("3. Login with your account");
+    answer = await rl.question("- ");
+  }
 
   switch (answer) {
     case "1":
