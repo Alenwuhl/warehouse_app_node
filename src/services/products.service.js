@@ -1,6 +1,32 @@
 import Product from "../models/products.model.js";
+import { logger } from "../config/loggerCustom.js"
+import startShopping from "../appServices/userApp/shoppingApp.js";
 
 export default class ProductService {
+  #validateProduct = async(productData) => {
+    if (
+      !productData.title ||
+      !productData.description ||
+      !productData.price ||
+      !productData.stock ||
+      !productData.category
+    ) {
+      logger.fatal('This product is not valid')
+      await startShopping()
+      
+    }
+    if (productData.stock <= 0) {
+      logger.fatal('This product is not valid')
+      logger.fatal('The stock can not be 0')
+      await startShopping()
+    }
+    if (productData.expirationDate < new Date()) {
+      logger.fatal('This product is not valid')
+      logger.fatal("Expiration date cannot be in the past");
+      await startShopping()
+    }
+  }
+  
   async getProducts() {
     try {
       const products = await Product.find();
@@ -85,21 +111,7 @@ export default class ProductService {
 
   async createProduct(productData) {
     try {
-      if (
-        !productData.title ||
-        !productData.description ||
-        !productData.price ||
-        !productData.stock ||
-        !productData.category
-      ) {
-        throw new Error("All fields are required");
-      }
-      if (productData.stock < 0) {
-        throw new Error("Stock cannot be negative");
-      }
-      if (productData.expirationDate < new Date()) {
-        throw new Error("Expiration date cannot be in the past");
-      }
+      this.#validateProduct(productData)
       const newProduct = await Product.create(productData);
       return newProduct;
     } catch (error) {

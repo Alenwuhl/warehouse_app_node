@@ -1,10 +1,9 @@
 import Carts from "../models/carts.models.js";
-import * as unitsController from "../controllers/units.controller.js";
-import ProductService from "./products.service.js";
+import * as productController from "./../controllers/products.controller.js";
 
-const productsService = new ProductService();
 
 export default class CartsService {
+
   async activeCart(unit) {
     try {
       const cart = await Carts.findOne({ unitId: unit, status: "active" });
@@ -92,7 +91,7 @@ export default class CartsService {
       } else {
         cart.items = [{ productId: productId, quantity: quantity }];
       }
-      const product = await productsService.getProductById(productId);
+      const product = await productController.getProductById(productId);
       
       cart.totalPrice = cart.totalPrice + product.price * quantity;
       await cart.save();

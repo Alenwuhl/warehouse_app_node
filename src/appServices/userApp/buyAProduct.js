@@ -72,7 +72,7 @@ export default async function buyAProduct(unit) {
       logger.info("2. Modify my order");
       logger.info("3. Return to the menu");
 
-      const answer = await rl.question("- ");
+      let answer = await rl.question("- ");
 
       while (answer !== "1" && answer !== "2" && answer !== "3") {
         logger.fatal("Invalid answer. Please try again.");

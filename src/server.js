@@ -8,8 +8,8 @@ import rl from "./config/readline.js";
 dotenv.config();
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
 
 const port = process.env.PORT || 8080;
 app.listen(port);
@@ -21,7 +21,12 @@ async function startServer() {
   logger.http("1. Yes, I know the rules.");
   logger.fatal("2. No, I don't know the rules.");
 
-  const answer = await rl.question("Please enter your answer: ");
+  let answer = await rl.question("Please enter your answer: ");
+  while (answer !== "1" && answer !== "2") {
+    logger.fatal("That is not an option!")
+    answer = await rl.question("- ");
+  }
+
 
   if (answer === "1") {
     logger.http("Great! Let's start.");
@@ -60,11 +65,11 @@ async function startServer() {
       return;
     } else {
       console.log("Invalid answer. Please try again.");
-      startServer();
+      await startServer();
     }
   } else {
     console.log("Invalid answer. Please try again.");
-    startServer();
+    await startServer();
   }
 }
 
