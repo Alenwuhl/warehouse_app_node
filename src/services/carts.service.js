@@ -139,7 +139,7 @@ export default class CartsService {
 
   async updateCart(id, updateValue) {
     try {
-      const updatedCart = await Carts.findByIdAndUpdate(id, updateValue);
+      const updatedCart = await Carts.findByIdAndUpdate(id, updateValue, { new: true, runValidators: true });
       return updatedCart;
     } catch (error) {
       console.error(error);

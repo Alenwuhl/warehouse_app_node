@@ -35,7 +35,7 @@ async function startServer() {
     console.log("- You can buy products from the store.");
     console.log("- You can only buy products if you have enough budget.");
     console.log("- You can modify your order until it is completed.");
-    console.log("- You can only see your own orders.");
+    console.log("- You can only see your own active order.");
     console.log(
       "----------------------------------------------------------------"
     );
